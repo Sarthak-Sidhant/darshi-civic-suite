@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-27-nandurbar-coll"
+name: "Nandurbar District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "maharashtra"
+reporting_to: "Revenue Department, Govt of Maharashtra"
+
+# === SCRAPING CONFIG ===
+url: "https://nandurbar.gov.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://nandurbar.gov.in"
+    urgency_default: "normal"

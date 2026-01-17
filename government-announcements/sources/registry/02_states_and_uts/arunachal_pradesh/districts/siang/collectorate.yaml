@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-12-siang-coll"
+name: "Siang District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "arunachal_pradesh"
+reporting_to: "Revenue Department, Govt of Arunachal Pradesh"
+
+# === SCRAPING CONFIG ===
+url: "https://siang.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://siang.nic.in"
+    urgency_default: "normal"

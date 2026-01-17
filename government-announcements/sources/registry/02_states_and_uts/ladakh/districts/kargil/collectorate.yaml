@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-37-kargil-coll"
+name: "Kargil District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "ladakh"
+reporting_to: "Revenue Department, Govt of Ladakh"
+
+# === SCRAPING CONFIG ===
+url: "https://kargil.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://kargil.nic.in"
+    urgency_default: "normal"

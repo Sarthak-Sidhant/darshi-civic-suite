@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-23-betul-coll"
+name: "Betul District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "madhya_pradesh"
+reporting_to: "Revenue Department, Govt of Madhya Pradesh"
+
+# === SCRAPING CONFIG ===
+url: "https://betul.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://betul.nic.in"
+    urgency_default: "normal"

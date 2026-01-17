@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-33-erode-coll"
+name: "Erode District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "tamil_nadu"
+reporting_to: "Revenue Department, Govt of Tamil Nadu"
+
+# === SCRAPING CONFIG ===
+url: "https://erode.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://erode.nic.in"
+    urgency_default: "normal"

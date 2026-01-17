@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-12-papum_pare-coll"
+name: "Papum Pare District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "arunachal_pradesh"
+reporting_to: "Revenue Department, Govt of Arunachal Pradesh"
+
+# === SCRAPING CONFIG ===
+url: "https://papumpare.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://papumpare.nic.in"
+    urgency_default: "normal"

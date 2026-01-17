@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-1-rajouri-coll"
+name: "Rajouri District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "jammu_and_kashmir"
+reporting_to: "Revenue Department, Govt of Jammu And Kashmir"
+
+# === SCRAPING CONFIG ===
+url: "https://rajouri.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://rajouri.nic.in"
+    urgency_default: "normal"

@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-19-paschim_medinipur-coll"
+name: "Paschim Medinipur District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "west_bengal"
+reporting_to: "Revenue Department, Govt of West Bengal"
+
+# === SCRAPING CONFIG ===
+url: "https://paschimmedinipur.gov.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://paschimmedinipur.gov.in"
+    urgency_default: "normal"

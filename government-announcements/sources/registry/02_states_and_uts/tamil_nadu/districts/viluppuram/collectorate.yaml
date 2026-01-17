@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-33-viluppuram-coll"
+name: "Viluppuram District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "tamil_nadu"
+reporting_to: "Revenue Department, Govt of Tamil Nadu"
+
+# === SCRAPING CONFIG ===
+url: "https://viluppuram.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://viluppuram.nic.in"
+    urgency_default: "normal"

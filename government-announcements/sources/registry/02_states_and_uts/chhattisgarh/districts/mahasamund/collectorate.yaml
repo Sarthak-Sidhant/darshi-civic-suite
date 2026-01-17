@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-22-mahasamund-coll"
+name: "Mahasamund District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "chhattisgarh"
+reporting_to: "Revenue Department, Govt of Chhattisgarh"
+
+# === SCRAPING CONFIG ===
+url: "https://mahasamund.gov.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://mahasamund.gov.in"
+    urgency_default: "normal"

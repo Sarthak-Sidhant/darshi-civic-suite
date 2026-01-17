@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-3-gurdaspur-coll"
+name: "Gurdaspur District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "punjab"
+reporting_to: "Revenue Department, Govt of Punjab"
+
+# === SCRAPING CONFIG ===
+url: "https://gurdaspur.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://gurdaspur.nic.in"
+    urgency_default: "normal"

@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-5-haridwar-coll"
+name: "Haridwar District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "uttarakhand"
+reporting_to: "Revenue Department, Govt of Uttarakhand"
+
+# === SCRAPING CONFIG ===
+url: "https://haridwar.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://haridwar.nic.in"
+    urgency_default: "normal"

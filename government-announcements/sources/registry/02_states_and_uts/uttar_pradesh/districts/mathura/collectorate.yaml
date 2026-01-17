@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-9-mathura-coll"
+name: "Mathura District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "uttar_pradesh"
+reporting_to: "Revenue Department, Govt of Uttar Pradesh"
+
+# === SCRAPING CONFIG ===
+url: "https://mathura.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://mathura.nic.in"
+    urgency_default: "normal"

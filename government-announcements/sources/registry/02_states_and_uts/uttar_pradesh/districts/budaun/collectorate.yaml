@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-9-budaun-coll"
+name: "Budaun District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "uttar_pradesh"
+reporting_to: "Revenue Department, Govt of Uttar Pradesh"
+
+# === SCRAPING CONFIG ===
+url: "https://budaun.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://budaun.nic.in"
+    urgency_default: "normal"

@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-13-kohima-coll"
+name: "Kohima District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "nagaland"
+reporting_to: "Revenue Department, Govt of Nagaland"
+
+# === SCRAPING CONFIG ===
+url: "https://kohima.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://kohima.nic.in"
+    urgency_default: "normal"

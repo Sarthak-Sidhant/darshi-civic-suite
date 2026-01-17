@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-13-noklak-coll"
+name: "Noklak District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "nagaland"
+reporting_to: "Revenue Department, Govt of Nagaland"
+
+# === SCRAPING CONFIG ===
+url: "https://noklak.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://noklak.nic.in"
+    urgency_default: "normal"

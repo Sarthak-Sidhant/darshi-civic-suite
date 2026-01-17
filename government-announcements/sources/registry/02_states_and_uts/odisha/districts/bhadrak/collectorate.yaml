@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-21-bhadrak-coll"
+name: "Bhadrak District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "odisha"
+reporting_to: "Revenue Department, Govt of Odisha"
+
+# === SCRAPING CONFIG ===
+url: "https://bhadrak.odisha.gov.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://bhadrak.odisha.gov.in"
+    urgency_default: "normal"

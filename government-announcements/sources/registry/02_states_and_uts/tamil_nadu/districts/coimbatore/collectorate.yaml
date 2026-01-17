@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-33-coimbatore-coll"
+name: "Coimbatore District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "tamil_nadu"
+reporting_to: "Revenue Department, Govt of Tamil Nadu"
+
+# === SCRAPING CONFIG ===
+url: "https://coimbatore.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://coimbatore.nic.in"
+    urgency_default: "normal"

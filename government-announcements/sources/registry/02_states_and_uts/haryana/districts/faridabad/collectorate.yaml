@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-6-faridabad-coll"
+name: "Faridabad District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "haryana"
+reporting_to: "Revenue Department, Govt of Haryana"
+
+# === SCRAPING CONFIG ===
+url: "https://faridabad.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://faridabad.nic.in"
+    urgency_default: "normal"

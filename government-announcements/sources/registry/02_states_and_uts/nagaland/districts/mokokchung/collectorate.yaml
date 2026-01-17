@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-13-mokokchung-coll"
+name: "Mokokchung District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "nagaland"
+reporting_to: "Revenue Department, Govt of Nagaland"
+
+# === SCRAPING CONFIG ===
+url: "https://mokokchung.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://mokokchung.nic.in"
+    urgency_default: "normal"

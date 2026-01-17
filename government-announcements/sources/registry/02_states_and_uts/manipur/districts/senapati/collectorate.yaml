@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-14-senapati-coll"
+name: "Senapati District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "manipur"
+reporting_to: "Revenue Department, Govt of Manipur"
+
+# === SCRAPING CONFIG ===
+url: "https://senapati.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://senapati.nic.in"
+    urgency_default: "normal"

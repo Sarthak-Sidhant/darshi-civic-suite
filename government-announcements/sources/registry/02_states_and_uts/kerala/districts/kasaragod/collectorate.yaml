@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-32-kasaragod-coll"
+name: "Kasaragod District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "kerala"
+reporting_to: "Revenue Department, Govt of Kerala"
+
+# === SCRAPING CONFIG ===
+url: "https://kasargod.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://kasargod.nic.in"
+    urgency_default: "normal"

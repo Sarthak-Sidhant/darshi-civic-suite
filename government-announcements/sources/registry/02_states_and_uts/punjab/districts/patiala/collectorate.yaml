@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-3-patiala-coll"
+name: "Patiala District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "punjab"
+reporting_to: "Revenue Department, Govt of Punjab"
+
+# === SCRAPING CONFIG ===
+url: "https://patiala.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://patiala.nic.in"
+    urgency_default: "normal"

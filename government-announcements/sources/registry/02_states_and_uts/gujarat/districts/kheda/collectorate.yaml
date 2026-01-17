@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-24-kheda-coll"
+name: "Kheda District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "gujarat"
+reporting_to: "Revenue Department, Govt of Gujarat"
+
+# === SCRAPING CONFIG ===
+url: "https://kheda.nic.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://kheda.nic.in"
+    urgency_default: "normal"

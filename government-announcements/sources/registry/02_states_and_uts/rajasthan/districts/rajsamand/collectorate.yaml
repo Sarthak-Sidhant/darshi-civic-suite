@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "dist-8-rajsamand-coll"
+name: "Rajsamand District Collectorate"
+type: "district_administration"
+jurisdiction_level: "district"
+
+# === HIERARCHY ===
+parent_state: "rajasthan"
+reporting_to: "Revenue Department, Govt of Rajasthan"
+
+# === SCRAPING CONFIG ===
+url: "https://rajsamand.rajasthan.gov.in"
+sections_to_watch:
+  - title: "Notices/Announcements"
+    url: "https://rajsamand.rajasthan.gov.in"
+    urgency_default: "normal"
