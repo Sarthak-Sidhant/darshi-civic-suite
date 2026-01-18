@@ -1,0 +1,1899 @@
+{
+  "api_version": "v1",
+  "base_url": "/api/v1",
+  "endpoints": [
+    {
+      "section": "REPORTS",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/report",
+          "full_path": "/api/v1/report",
+          "description": "Create a new report with images and location data. Dynamic rate limiting: 10 reports/hour for anonymous, 50 reports/hour for authenticated users.",
+          "authentication": "Optional (JWT Bearer token)",
+          "rate_limit": "10/hour (anonymous) | 50/hour (authenticated)",
+          "request_body": {
+            "type": "multipart/form-data",
+            "fields": [
+              {
+                "name": "files",
+                "type": "List[UploadFile]",
+                "required": true,
+                "description": "Image files (1-5 images, max 10MB each)",
+                "content_types": ["image/jpeg", "image/png", "image/webp"]
+              },
+              {
+                "name": "location",
+                "type": "string",
+                "required": true,
+                "description": "Human-readable location or coordinates (e.g., '28.7041,77.1025' or 'Delhi')"
+              },
+              {
+                "name": "title",
+                "type": "string",
+                "required": true,
+                "description": "Report title (max 200 chars)"
+              },
+              {
+                "name": "description",
+                "type": "string",
+                "required": false,
+                "description": "Detailed description of the issue (max 1000 chars)"
+              },
+              {
+                "name": "username",
+                "type": "string",
+                "required": false,
+                "description": "Anonymous username (auto-generated if not provided and not authenticated)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 201,
+            "model": "ReportResponse",
+            "schema": {
+              "report_id": "string",
+              "status": "string (PENDING_VERIFICATION)"
+            }
+          },
+          "notes": [
+            "Background task processes AI verification asynchronously",
+            "Duplicate detection using dHash (perceptual hashing)",
+            "Images optimized to WebP and JPEG formats",
+            "Geohashing for proximity queries",
+            "Reverse geocoding for human-readable addresses"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/report/{report_id}",
+          "full_path": "/api/v1/report/{report_id}",
+          "description": "Get a single report by ID",
+          "authentication": "None",
+          "rate_limit": "200/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true,
+              "description": "Unique report identifier"
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "report_id": "string",
+              "username": "string",
+              "title": "string",
+              "description": "string",
+              "location": "string",
+              "latitude": "float",
+              "longitude": "float",
+              "status": "string",
+              "category": "string",
+              "severity": "int",
+              "image_data": "array<{webp_url, jpeg_url}>",
+              "upvote_count": "int",
+              "created_at": "string"
+            }
+          },
+          "caching": "Public cache for 60 seconds (server), 120 seconds (CDN)"
+        },
+        {
+          "method": "GET",
+          "path": "/reports",
+          "full_path": "/api/v1/reports",
+          "description": "List reports with pagination and optional geohash filtering",
+          "authentication": "None",
+          "rate_limit": "200/hour",
+          "query_parameters": [
+            {
+              "name": "start_after_id",
+              "type": "string",
+              "required": false,
+              "description": "Pagination cursor - ID to start after"
+            },
+            {
+              "name": "geohash",
+              "type": "string",
+              "required": false,
+              "description": "Filter by geohash prefix (precision 5, ~4.9km grid)"
+            },
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 10,
+              "description": "Number of reports to return"
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": "array<Report>"
+          },
+          "caching": "Public cache for 30 seconds (client), 60 seconds (CDN)"
+        },
+        {
+          "method": "POST",
+          "path": "/report/{report_id}/upvote",
+          "full_path": "/api/v1/report/{report_id}/upvote",
+          "description": "Upvote a report. Idempotent - multiple upvotes by same user don't increase count. Sends milestone notifications at 10, 50, 100, 500, 1000 upvotes.",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "upvote_count": "int",
+              "user_upvoted": "boolean"
+            }
+          },
+          "notes": [
+            "Username extracted from JWT token to prevent IDOR attacks",
+            "Sends in-app and browser push notifications on milestone events"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/report/{report_id}/comment",
+          "full_path": "/api/v1/report/{report_id}/comment",
+          "description": "Add a comment to a report",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "50/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "request_body": {
+            "type": "form-data",
+            "fields": [
+              {
+                "name": "text",
+                "type": "string",
+                "required": true,
+                "description": "Comment text (1-500 characters)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "id": "string",
+              "username": "string",
+              "text": "string",
+              "created_at": "string"
+            }
+          },
+          "notes": [
+            "Username extracted from JWT token",
+            "Sends notification to report author (if different from commenter)",
+            "Text is sanitized before storage"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/report/{report_id}/comments",
+          "full_path": "/api/v1/report/{report_id}/comments",
+          "description": "Get all comments for a report",
+          "authentication": "None",
+          "rate_limit": "200/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": "array<Comment>"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/report/{report_id}",
+          "full_path": "/api/v1/report/{report_id}",
+          "description": "Edit a report (title and description only). Only report owner can edit. Can only edit reports in PENDING_VERIFICATION, VERIFIED, or FLAGGED status.",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "50/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "request_body": {
+            "type": "form-data",
+            "fields": [
+              {
+                "name": "title",
+                "type": "string",
+                "required": false,
+                "description": "Updated report title"
+              },
+              {
+                "name": "description",
+                "type": "string",
+                "required": false,
+                "description": "Updated report description"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "report_id": "string"
+            }
+          },
+          "notes": [
+            "Ownership validation via JWT token username",
+            "Cannot edit RESOLVED, REJECTED, DUPLICATE, or IN_PROGRESS reports",
+            "Timeline event added for audit trail"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/report/{report_id}",
+          "full_path": "/api/v1/report/{report_id}",
+          "description": "Delete a report. Only report owner can delete. Can only delete reports in PENDING_VERIFICATION, FLAGGED, or REJECTED status.",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "50/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "Ownership validation via JWT token username",
+            "Cannot delete VERIFIED, RESOLVED, IN_PROGRESS, or DUPLICATE reports"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/report/{report_id}/nearby-landmarks",
+          "full_path": "/api/v1/report/{report_id}/nearby-landmarks",
+          "description": "Get nearby landmarks for a report (within 500m radius, up to 5 landmarks)",
+          "authentication": "None",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "landmarks": "array<{name, type, distance_m, distance_text}>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section": "GEOSPATIAL",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/geocode",
+          "full_path": "/api/v1/geocode",
+          "description": "Convert address to coordinates (forward geocoding) via Nominatim API",
+          "authentication": "None",
+          "rate_limit": "100/hour",
+          "query_parameters": [
+            {
+              "name": "q",
+              "type": "string",
+              "required": true,
+              "description": "Address query (limited to India)"
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "latitude": "float",
+              "longitude": "float",
+              "address": "string"
+            }
+          },
+          "notes": [
+            "Geocoding limited to India (countrycodes=in)",
+            "Circuit breaker protection: 3 failures / 60s"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/reverse-geocode",
+          "full_path": "/api/v1/reverse-geocode",
+          "description": "Convert coordinates to human-readable address (reverse geocoding)",
+          "authentication": "None",
+          "rate_limit": "100/hour",
+          "query_parameters": [
+            {
+              "name": "lat",
+              "type": "float",
+              "required": true,
+              "description": "Latitude"
+            },
+            {
+              "name": "lng",
+              "type": "float",
+              "required": true,
+              "description": "Longitude"
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "address": "string"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/alerts",
+          "full_path": "/api/v1/alerts",
+          "description": "Get hotspot alerts from BigQuery. Identifies areas with 3+ severe issues in 24 hours.",
+          "authentication": "None",
+          "rate_limit": "100/hour",
+          "response": {
+            "status_code": 200,
+            "schema": "array<{location, severity, count, timestamp}>"
+          },
+          "caching": "Server-side cached for 5 minutes",
+          "notes": [
+            "Queries BigQuery analytics table",
+            "Hotspot criteria: severity > 7, count >= 3 within 24h"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "AUTHENTICATION",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/auth/register",
+          "full_path": "/api/v1/auth/register",
+          "description": "Register a new user with username, email, and/or phone. Email verification can be enabled.",
+          "authentication": "None",
+          "rate_limit": "5/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "UserCreate",
+            "fields": [
+              {
+                "name": "username",
+                "type": "string",
+                "required": true,
+                "description": "Unique username"
+              },
+              {
+                "name": "email",
+                "type": "string",
+                "required": false,
+                "description": "Email address (required if phone not provided)"
+              },
+              {
+                "name": "phone",
+                "type": "string",
+                "required": false,
+                "description": "Phone number (required if email not provided)"
+              },
+              {
+                "name": "password",
+                "type": "string",
+                "required": false,
+                "description": "Password (optional for phone-only users, who use OTP)"
+              },
+              {
+                "name": "full_name",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "lat",
+                "type": "float",
+                "required": false
+              },
+              {
+                "name": "lng",
+                "type": "float",
+                "required": false
+              },
+              {
+                "name": "location_address",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "role",
+                "type": "string",
+                "required": false,
+                "default": "citizen",
+                "description": "User role (citizen or admin)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 201,
+            "model": "UserResponse",
+            "schema": {
+              "username": "string",
+              "email": "string",
+              "phone": "string",
+              "full_name": "string",
+              "role": "string",
+              "email_verified": "boolean",
+              "phone_verified": "boolean",
+              "created_at": "string"
+            }
+          },
+          "notes": [
+            "At least one of email or phone required",
+            "Password optional for phone-only accounts",
+            "Verification email sent if EMAIL_ENABLED and email provided",
+            "Generic error returned if credentials already exist (prevents user enumeration)"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/token",
+          "full_path": "/api/v1/auth/token",
+          "description": "Login with username/email/phone and password. Returns JWT token.",
+          "authentication": "None",
+          "rate_limit": "10/hour",
+          "request_body": {
+            "type": "application/x-www-form-urlencoded",
+            "model": "OAuth2PasswordRequestForm",
+            "fields": [
+              {
+                "name": "username",
+                "type": "string",
+                "required": true,
+                "description": "Can be username, email, or phone number"
+              },
+              {
+                "name": "password",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "model": "Token",
+            "schema": {
+              "access_token": "string (JWT)",
+              "token_type": "string (bearer)"
+            }
+          },
+          "notes": [
+            "OAuth2 password flow implementation",
+            "Supports username, email, or phone-based login",
+            "JWT token includes user_type='citizen'",
+            "Token expiration: 30 days (43200 minutes)",
+            "Brute-force protection via rate limiting"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/auth/me",
+          "full_path": "/api/v1/auth/me",
+          "description": "Get current authenticated user information",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Unlimited (default slowapi)",
+          "response": {
+            "status_code": 200,
+            "model": "UserResponse",
+            "schema": {
+              "username": "string",
+              "email": "string",
+              "phone": "string",
+              "full_name": "string",
+              "role": "string",
+              "email_verified": "boolean",
+              "phone_verified": "boolean"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/send-email-verification",
+          "full_path": "/api/v1/auth/send-email-verification",
+          "description": "Send or resend email verification link",
+          "authentication": "None",
+          "rate_limit": "3/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "EmailVerificationRequest",
+            "fields": [
+              {
+                "name": "email",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "Generic response to prevent email enumeration",
+            "Returns success even if email doesn't exist"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/verify-email",
+          "full_path": "/api/v1/auth/verify-email",
+          "description": "Verify email using token from verification link",
+          "authentication": "None",
+          "rate_limit": "10/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "EmailVerification",
+            "fields": [
+              {
+                "name": "token",
+                "type": "string",
+                "required": true,
+                "description": "Verification token from email link"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "email": "string"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/send-phone-verification",
+          "full_path": "/api/v1/auth/send-phone-verification",
+          "description": "Send phone verification code (OTP)",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "5/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "PhoneVerificationRequest",
+            "fields": [
+              {
+                "name": "phone",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/verify-phone",
+          "full_path": "/api/v1/auth/verify-phone",
+          "description": "Verify phone using OTP code",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "10/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "PhoneVerification",
+            "fields": [
+              {
+                "name": "phone",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "code",
+                "type": "string",
+                "required": true,
+                "description": "OTP code"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/forgot-password",
+          "full_path": "/api/v1/auth/forgot-password",
+          "description": "Request password reset link",
+          "authentication": "None",
+          "rate_limit": "3/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "PasswordResetRequest",
+            "fields": [
+              {
+                "name": "email",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "Always returns success message to prevent email enumeration",
+            "Links are time-limited"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/reset-password",
+          "full_path": "/api/v1/auth/reset-password",
+          "description": "Reset password using token from email link",
+          "authentication": "None",
+          "rate_limit": "5/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "PasswordReset",
+            "fields": [
+              {
+                "name": "token",
+                "type": "string",
+                "required": true,
+                "description": "Reset token from email link"
+              },
+              {
+                "name": "new_password",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/auth/change-password",
+          "full_path": "/api/v1/auth/change-password",
+          "description": "Change password for authenticated user (requires old password)",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "10/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "PasswordChange",
+            "fields": [
+              {
+                "name": "old_password",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "new_password",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "Not available for OAuth users",
+            "Requires correct old password for security"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "OAUTH",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/auth/google/login",
+          "full_path": "/api/v1/auth/google/login",
+          "description": "Redirect to Google OAuth login page with CSRF protection",
+          "authentication": "None",
+          "rate_limit": "None",
+          "response": {
+            "status_code": 302,
+            "redirect_to": "https://accounts.google.com/o/oauth2/v2/auth",
+            "notes": [
+              "Generates state parameter for CSRF protection",
+              "Requires GOOGLE_CLIENT_ID to be configured"
+            ]
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/google/callback",
+          "full_path": "/api/v1/auth/google/callback",
+          "description": "Handle Google OAuth callback. Creates or links user account.",
+          "authentication": "None",
+          "rate_limit": "None",
+          "query_parameters": [
+            {
+              "name": "code",
+              "type": "string",
+              "required": true,
+              "description": "Authorization code from Google"
+            },
+            {
+              "name": "state",
+              "type": "string",
+              "required": true,
+              "description": "State parameter for CSRF validation"
+            },
+            {
+              "name": "error",
+              "type": "string",
+              "required": false,
+              "description": "Error code if authorization failed"
+            }
+          ],
+          "response": {
+            "status_code": 302,
+            "redirect_to": "{FRONTEND_URL}/auth/callback?token={jwt_token}&is_new={boolean}"
+          },
+          "notes": [
+            "Validates state parameter to prevent CSRF",
+            "Creates new user if OAuth ID not found",
+            "Links OAuth to existing email-based user if found",
+            "Returns JWT token via redirect"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/auth/github/login",
+          "full_path": "/api/v1/auth/github/login",
+          "description": "Redirect to GitHub OAuth login page with CSRF protection",
+          "authentication": "None",
+          "rate_limit": "None",
+          "response": {
+            "status_code": 302,
+            "redirect_to": "https://github.com/login/oauth/authorize"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/github/callback",
+          "full_path": "/api/v1/auth/github/callback",
+          "description": "Handle GitHub OAuth callback",
+          "authentication": "None",
+          "rate_limit": "None",
+          "query_parameters": [
+            {
+              "name": "code",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "state",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "error",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": {
+            "status_code": 302,
+            "redirect_to": "{FRONTEND_URL}/auth/callback?token={jwt_token}&is_new={boolean}"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/facebook/login",
+          "full_path": "/api/v1/auth/facebook/login",
+          "description": "Redirect to Facebook OAuth login page with CSRF protection",
+          "authentication": "None",
+          "rate_limit": "None",
+          "response": {
+            "status_code": 302,
+            "redirect_to": "https://www.facebook.com/v18.0/dialog/oauth"
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/facebook/callback",
+          "full_path": "/api/v1/auth/facebook/callback",
+          "description": "Handle Facebook OAuth callback",
+          "authentication": "None",
+          "rate_limit": "None",
+          "query_parameters": [
+            {
+              "name": "code",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "state",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "error",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "response": {
+            "status_code": 302,
+            "redirect_to": "{FRONTEND_URL}/auth/callback?token={jwt_token}&is_new={boolean}"
+          }
+        }
+      ]
+    },
+    {
+      "section": "FIREBASE AUTHENTICATION",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/auth/firebase/verify",
+          "full_path": "/api/v1/auth/firebase/verify",
+          "description": "Verify Firebase ID token and create/login user. Supports Google, GitHub, Facebook OAuth, phone auth, and Firebase password auth.",
+          "authentication": "None (Firebase ID token in request body)",
+          "rate_limit": "None",
+          "request_body": {
+            "type": "application/json",
+            "model": "FirebaseTokenRequest",
+            "fields": [
+              {
+                "name": "id_token",
+                "type": "string",
+                "required": true,
+                "description": "Firebase ID token"
+              },
+              {
+                "name": "username",
+                "type": "string",
+                "required": false,
+                "description": "For new users (optional)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "model": "OAuthToken",
+            "schema": {
+              "access_token": "string (JWT)",
+              "token_type": "string (bearer)",
+              "is_new_user": "boolean",
+              "user_info": "object (optional, for new users)"
+            }
+          },
+          "notes": [
+            "For new users, access_token is empty and user_info is returned",
+            "For existing users, access_token is populated",
+            "Automatically links OAuth provider if not already linked",
+            "Supports multiple sign-in providers"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/firebase/complete-registration",
+          "full_path": "/api/v1/auth/firebase/complete-registration",
+          "description": "Complete OAuth registration with username and location after user provides them",
+          "authentication": "None (Firebase ID token in request body)",
+          "rate_limit": "None",
+          "request_body": {
+            "type": "application/json",
+            "model": "CompleteRegistrationRequest",
+            "fields": [
+              {
+                "name": "id_token",
+                "type": "string",
+                "required": true,
+                "description": "Firebase ID token"
+              },
+              {
+                "name": "username",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "lat",
+                "type": "float",
+                "required": true
+              },
+              {
+                "name": "lng",
+                "type": "float",
+                "required": true
+              },
+              {
+                "name": "location_address",
+                "type": "string",
+                "required": false
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "model": "OAuthToken",
+            "schema": {
+              "access_token": "string (JWT)",
+              "token_type": "string (bearer)",
+              "is_new_user": "boolean"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/auth/check-username/{username}",
+          "full_path": "/api/v1/auth/check-username/{username}",
+          "description": "Check if a username is available",
+          "authentication": "None",
+          "rate_limit": "None",
+          "path_parameters": [
+            {
+              "name": "username",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "available": "boolean",
+              "username": "string"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/auth/phone/send-otp",
+          "full_path": "/api/v1/auth/phone/send-otp",
+          "description": "Placeholder endpoint for phone OTP. Handled client-side by Firebase SDK.",
+          "authentication": "None",
+          "rate_limit": "None",
+          "query_parameters": [
+            {
+              "name": "phone",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "phone": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section": "NOTIFICATIONS",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/notifications",
+          "full_path": "/api/v1/notifications",
+          "description": "Get notifications for current user. Ordered by creation time (newest first).",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "30/minute",
+          "query_parameters": [
+            {
+              "name": "unread_only",
+              "type": "boolean",
+              "required": false,
+              "default": false,
+              "description": "Filter to only unread notifications"
+            },
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 50,
+              "min": 1,
+              "max": 100
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "notifications": "array<Notification>",
+              "unread_count": "integer"
+            }
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/notifications/{notification_id}/read",
+          "full_path": "/api/v1/notifications/{notification_id}/read",
+          "description": "Mark a single notification as read",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "100/minute",
+          "path_parameters": [
+            {
+              "name": "notification_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "success": "boolean"
+            }
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/notifications/read-all",
+          "full_path": "/api/v1/notifications/read-all",
+          "description": "Mark all notifications as read for current user",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "20/minute",
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "marked_read": "integer"
+            }
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/notifications/{notification_id}",
+          "full_path": "/api/v1/notifications/{notification_id}",
+          "description": "Delete a notification",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "50/minute",
+          "path_parameters": [
+            {
+              "name": "notification_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "success": "boolean"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/notifications/push/subscribe",
+          "full_path": "/api/v1/notifications/push/subscribe",
+          "description": "Save browser push notification subscription for receiving notifications when app is closed",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "10/minute",
+          "request_body": {
+            "type": "application/json",
+            "model": "PushSubscribeRequest",
+            "fields": [
+              {
+                "name": "endpoint",
+                "type": "string",
+                "required": true,
+                "description": "Push service endpoint URL"
+              },
+              {
+                "name": "keys",
+                "type": "object",
+                "required": true,
+                "description": "Encryption keys {p256dh: string, auth: string}"
+              },
+              {
+                "name": "user_agent",
+                "type": "string",
+                "required": false
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "subscription_id": "string",
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/notifications/push/unsubscribe",
+          "full_path": "/api/v1/notifications/push/unsubscribe",
+          "description": "Remove browser push notification subscription",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "10/minute",
+          "query_parameters": [
+            {
+              "name": "endpoint",
+              "type": "string",
+              "required": true,
+              "description": "Push subscription endpoint URL to remove"
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "success": "boolean",
+              "message": "string"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "section": "USERS",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/users/me/profile",
+          "full_path": "/api/v1/users/me/profile",
+          "description": "Get complete profile of current user including stats",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "response": {
+            "status_code": 200,
+            "model": "UserProfileResponse",
+            "schema": {
+              "username": "string",
+              "email": "string",
+              "full_name": "string",
+              "phone": "string",
+              "lat": "float",
+              "lng": "float",
+              "location_address": "string",
+              "profile_picture": "string",
+              "role": "string",
+              "email_verified": "boolean",
+              "phone_verified": "boolean",
+              "reports_count": "integer",
+              "upvotes_received": "integer",
+              "created_at": "string"
+            }
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/users/me/profile",
+          "full_path": "/api/v1/users/me/profile",
+          "description": "Update user profile (name, phone, location, picture URL)",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "request_body": {
+            "type": "application/json",
+            "model": "UserUpdateProfile",
+            "fields": [
+              {
+                "name": "full_name",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "phone",
+                "type": "string",
+                "required": false,
+                "note": "Setting phone re-requires verification"
+              },
+              {
+                "name": "lat",
+                "type": "float",
+                "required": false
+              },
+              {
+                "name": "lng",
+                "type": "float",
+                "required": false
+              },
+              {
+                "name": "location_address",
+                "type": "string",
+                "required": false
+              },
+              {
+                "name": "profile_picture",
+                "type": "string",
+                "required": false,
+                "description": "URL to profile picture"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "model": "UserProfileResponse"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/users/me/profile-picture",
+          "full_path": "/api/v1/users/me/profile-picture",
+          "description": "Upload profile picture to cloud storage",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "request_body": {
+            "type": "multipart/form-data",
+            "fields": [
+              {
+                "name": "file",
+                "type": "UploadFile",
+                "required": true,
+                "description": "Image file (image/* content type)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "url": "string",
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/users/me/settings",
+          "full_path": "/api/v1/users/me/settings",
+          "description": "Update user preferences/settings",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "request_body": {
+            "type": "application/json",
+            "model": "UserUpdateSettings",
+            "fields": [
+              {
+                "name": "notification_enabled",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "location_tracking_enabled",
+                "type": "boolean",
+                "required": false
+              },
+              {
+                "name": "public_profile",
+                "type": "boolean",
+                "required": false
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/users/me/reports",
+          "full_path": "/api/v1/users/me/reports",
+          "description": "Get all reports submitted by current user",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "query_parameters": [
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 50
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "reports": "array<Report>",
+              "total": "integer"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/users/me/stats",
+          "full_path": "/api/v1/users/me/stats",
+          "description": "Get user statistics (reports, upvotes, verification status, etc.)",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "total_reports": "integer",
+              "verified_reports": "integer",
+              "resolved_reports": "integer",
+              "pending_reports": "integer",
+              "total_upvotes": "integer",
+              "email_verified": "boolean",
+              "phone_verified": "boolean",
+              "member_since": "string"
+            }
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/users/me/account",
+          "full_path": "/api/v1/users/me/account",
+          "description": "Delete user account and all associated data (IRREVERSIBLE)",
+          "authentication": "Required (JWT Bearer token)",
+          "rate_limit": "Default",
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "WARNING: Deletes all user's reports and account",
+            "This action is irreversible"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "ADMIN",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/admin/login",
+          "full_path": "/api/v1/admin/login",
+          "description": "Admin login endpoint. Creates JWT with user_type='admin'.",
+          "authentication": "None",
+          "rate_limit": "100/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "AdminLoginRequest",
+            "fields": [
+              {
+                "name": "email",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "password",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "token": "string (JWT with user_type=admin)",
+              "admin": {
+                "email": "string",
+                "role": "string"
+              }
+            }
+          },
+          "notes": [
+            "Authenticates from separate 'admins' collection",
+            "Rate limiting prevents brute force attacks",
+            "JWT includes user_type='admin' for authorization checks"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/admin/report/{report_id}/status",
+          "full_path": "/api/v1/admin/report/{report_id}/status",
+          "description": "Update report status (admin only). Can set to RESOLVED, REJECTED, IN_PROGRESS, etc.",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "500/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "request_body": {
+            "type": "application/json",
+            "model": "StatusUpdateRequest",
+            "fields": [
+              {
+                "name": "status",
+                "type": "string",
+                "required": true,
+                "description": "New status (RESOLVED, REJECTED, IN_PROGRESS, etc.)"
+              },
+              {
+                "name": "note",
+                "type": "string",
+                "required": false,
+                "description": "Optional admin note"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "updated_by": "string (admin email)"
+            }
+          },
+          "notes": [
+            "Sends notification to report author",
+            "Adds timeline event for audit trail",
+            "Logs all actions in audit log"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/admin/admins",
+          "full_path": "/api/v1/admin/admins",
+          "description": "List all admin users (super_admin only)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "500/hour",
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "admins": "array<Admin>"
+            }
+          },
+          "notes": [
+            "Only accessible by super_admin role",
+            "Includes inactive admins"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/admin/analytics/dashboard",
+          "full_path": "/api/v1/admin/analytics/dashboard",
+          "description": "Get comprehensive analytics for admin dashboard including report statistics, status distribution, recent activity",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "500/hour",
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "summary": {
+                "total_reports": "integer",
+                "average_severity": "float",
+                "status_distribution": "object",
+                "category_distribution": "object"
+              },
+              "top_categories": "array<{category, count}>",
+              "recent_admin_actions": "array<AuditLog>",
+              "generated_at": "string"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/admin/analytics/audit-logs",
+          "full_path": "/api/v1/admin/analytics/audit-logs",
+          "description": "Get audit logs with optional filtering by user, resource type, action, etc.",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "500/hour",
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "resource_type",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "resource_id",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "action",
+              "type": "string",
+              "required": false
+            },
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 100
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "logs": "array<AuditLog>",
+              "count": "integer",
+              "filters": "object"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/admin/analytics/user-activity/{user_id}",
+          "full_path": "/api/v1/admin/analytics/user-activity/{user_id}",
+          "description": "Get activity history for a specific user (admin or citizen)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "user_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "query_parameters": [
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 50
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "user_id": "string",
+              "activity": "array<AuditLog>",
+              "count": "integer"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/admin/analytics/report-history/{report_id}",
+          "full_path": "/api/v1/admin/analytics/report-history/{report_id}",
+          "description": "Get complete audit history for a specific report including status changes and timeline events",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "report_id": "string",
+              "current_status": "string",
+              "timeline": "array<TimelineEvent>",
+              "audit_logs": "array<AuditLog>",
+              "created_at": "string"
+            }
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/admin/report/{report_id}",
+          "full_path": "/api/v1/admin/report/{report_id}",
+          "description": "Delete a report (admin only). Can delete any report regardless of status.",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "deleted_by": "string (admin email)"
+            }
+          },
+          "notes": [
+            "Logs all deletions in audit trail",
+            "Can delete reports in any status"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/admin/report/{report_id}/category",
+          "full_path": "/api/v1/admin/report/{report_id}/category",
+          "description": "Update report category (admin only)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "500/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "request_body": {
+            "type": "application/json",
+            "model": "CategoryUpdateRequest",
+            "fields": [
+              {
+                "name": "category",
+                "type": "string",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "updated_by": "string"
+            }
+          }
+        },
+        {
+          "method": "DELETE",
+          "path": "/admin/report/{report_id}/comment/{comment_id}",
+          "full_path": "/api/v1/admin/report/{report_id}/comment/{comment_id}",
+          "description": "Delete a comment from a report (admin only)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "100/hour",
+          "path_parameters": [
+            {
+              "name": "report_id",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "comment_id",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "deleted_by": "string"
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/admin/create-admin",
+          "full_path": "/api/v1/admin/create-admin",
+          "description": "Create a new admin user (super_admin only)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "10/hour",
+          "request_body": {
+            "type": "application/json",
+            "model": "CreateAdminRequest",
+            "fields": [
+              {
+                "name": "email",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "password",
+                "type": "string",
+                "required": true
+              },
+              {
+                "name": "role",
+                "type": "string",
+                "required": false,
+                "default": "moderator",
+                "description": "Admin role (super_admin, moderator, etc.)"
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string",
+              "admin": "object"
+            }
+          },
+          "notes": [
+            "Only super_admin can create new admins",
+            "Logs creation in audit trail"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/admin/reports",
+          "full_path": "/api/v1/admin/reports",
+          "description": "Get reports for admin view (includes REJECTED and FLAGGED statuses)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "100/hour",
+          "query_parameters": [
+            {
+              "name": "start_after_id",
+              "type": "string",
+              "required": false,
+              "description": "Pagination cursor"
+            },
+            {
+              "name": "status",
+              "type": "string",
+              "required": false,
+              "description": "Filter by status"
+            },
+            {
+              "name": "limit",
+              "type": "integer",
+              "required": false,
+              "default": 20,
+              "max": 100
+            }
+          ],
+          "response": {
+            "status_code": 200,
+            "schema": "array<Report>"
+          }
+        },
+        {
+          "method": "PUT",
+          "path": "/admin/manage/{admin_email}/status",
+          "full_path": "/api/v1/admin/manage/{admin_email}/status",
+          "description": "Activate or deactivate an admin account (super_admin only)",
+          "authentication": "Required (JWT Bearer token with user_type='admin')",
+          "rate_limit": "50/hour",
+          "path_parameters": [
+            {
+              "name": "admin_email",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "request_body": {
+            "type": "application/json",
+            "model": "UpdateAdminStatusRequest",
+            "fields": [
+              {
+                "name": "is_active",
+                "type": "boolean",
+                "required": true
+              }
+            ]
+          },
+          "response": {
+            "status_code": 200,
+            "schema": {
+              "message": "string"
+            }
+          },
+          "notes": [
+            "Only super_admin can modify admin status",
+            "Cannot deactivate yourself"
+          ]
+        }
+      ]
+    }
+  ],
+  "authentication_schemes": {
+    "jwt_bearer": {
+      "type": "HTTP Bearer",
+      "scheme": "Bearer",
+      "location": "Authorization header",
+      "format": "Authorization: Bearer {token}",
+      "token_type": "JWT",
+      "expiration": "30 days",
+      "notes": [
+        "Citizen tokens have user_type='citizen'",
+        "Admin tokens have user_type='admin'",
+        "Admin tokens cannot be used for citizen endpoints and vice versa"
+      ]
+    },
+    "optional_jwt": {
+      "type": "Optional JWT",
+      "description": "Some endpoints support both authenticated and anonymous access",
+      "example_endpoints": [
+        "/api/v1/report - Create report (dynamic rate limits based on auth)"
+      ]
+    }
+  },
+  "rate_limiting": {
+    "implementation": "slowapi",
+    "dynamic_limits": [
+      {
+        "endpoint": "/api/v1/report",
+        "authenticated": "50 reports/hour",
+        "anonymous": "10 reports/hour",
+        "note": "5x more for authenticated users"
+      }
+    ],
+    "standard_limits": {
+      "public_endpoints": "100-200/hour",
+      "write_endpoints": "50-100/hour",
+      "auth_endpoints": "3-10/hour (brute force prevention)",
+      "admin_endpoints": "10-500/hour",
+      "notification_endpoints": "10-100/minute"
+    }
+  },
+  "error_handling": {
+    "format": {
+      "status_code": "HTTP status code",
+      "detail": "Error message",
+      "notes": "Some endpoints return structured error response"
+    },
+    "common_errors": {
+      "401": "Unauthorized - Missing or invalid JWT token",
+      "403": "Forbidden - Insufficient permissions (e.g., citizen token on admin endpoint)",
+      "404": "Not found - Resource doesn't exist",
+      "400": "Bad request - Invalid input or validation failure",
+      "429": "Rate limit exceeded",
+      "500": "Internal server error"
+    }
+  },
+  "caching": {
+    "headers_used": [
+      "Cache-Control: public, max-age={client_seconds}, s-maxage={cdn_seconds}"
+    ],
+    "cached_endpoints": [
+      {
+        "endpoint": "/api/v1/report/{report_id}",
+        "max_age": "60 seconds",
+        "s_maxage": "120 seconds"
+      },
+      {
+        "endpoint": "/api/v1/reports",
+        "max_age": "30 seconds",
+        "s_maxage": "60 seconds"
+      },
+      {
+        "endpoint": "/api/v1/alerts",
+        "max_age": "300 seconds",
+        "s_maxage": "300 seconds",
+        "note": "Server-side cache TTL matches"
+      }
+    ]
+  },
+  "status_codes": {
+    "success": [200, 201],
+    "client_errors": [400, 401, 403, 404, 429],
+    "server_errors": [500, 501]
+  }
+}

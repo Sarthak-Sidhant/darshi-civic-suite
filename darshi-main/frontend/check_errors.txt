@@ -1,0 +1,3278 @@
+
+> frontend@0.0.1 check
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /home/sidhant/Desktop/darshi/frontend
+Getting Svelte diagnostics...
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/api.ts:430:20
+Error: Cannot find name 'fetchWithAuth'. 
+export async function createReportUpdate(reportId: string, content: string, status: 'public' | 'internal' = 'public', isOfficial: boolean = false): Promise<ReportUpdate> {
+	const res = await fetchWithAuth(`${API_BASE_URL}/reports/${reportId}/updates`, {
+		method: 'POST',
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/api.ts:441:20
+Error: Cannot find name 'fetchWithAuth'. 
+	// Use deduplicated fetch if needed, but updates might be fresh
+	const res = await fetchWithAuth(`${API_BASE_URL}/reports/${reportId}/updates`);
+	if (!res.ok) throw new Error('Failed to fetch updates');
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:89:5
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+{#if isOpen}
+    <div
+        class="modal-overlay"
+        transition:fade={{ duration: 200 }}
+        onclick={close}
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <MapPin class="w-5 h-5 text-primary" />
+                    Select City
+                </h2>
+                {#if dismissible}
+                    <button class="btn-close" onclick={close}>
+                        <X size={20} />
+                    </button>
+                {/if}
+            </header>
+
+            <div class="modal-body">
+                <div class="search-box">
+                    <Search size={18} class="search-icon" />
+                    <input
+                        type="text"
+                        bind:value={searchQuery}
+                        placeholder="Search for your city..."
+                        autofocus
+                    />
+                </div>
+
+                <button
+                    class="detect-btn"
+                    onclick={detectLocation}
+                    disabled={locating}
+                >
+                    {#if locating}
+                        <LoadingSpinner size="sm" />
+                    {:else}
+                        <Navigation size={18} />
+                    {/if}
+                    <span>Use my current location</span>
+                </button>
+
+                <div class="divider">or choose manually</div>
+
+                <div class="cities-list">
+                    {#if loading}
+                        <div class="loading-state">
+                            <LoadingSpinner size="md" />
+                        </div>
+                    {:else if filteredCities.length === 0}
+                        <div class="empty-state">
+                            <p>No cities found</p>
+                        </div>
+                    {:else}
+                        {#each filteredCities as city}
+                            <button
+                                class="city-item"
+                                class:active={$currentCity?.id === city.id}
+                                onclick={() => selectCity(city)}
+                            >
+                                <div class="city-info">
+                                    <span class="city-name">{city.name}</span>
+                                    <span class="city-state">{city.state}</span>
+                                </div>
+                                {#if $currentCity?.id === city.id}
+                                    <Check size={18} class="text-primary" />
+                                {/if}
+                            </button>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:89:5
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+{#if isOpen}
+    <div
+        class="modal-overlay"
+        transition:fade={{ duration: 200 }}
+        onclick={close}
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <MapPin class="w-5 h-5 text-primary" />
+                    Select City
+                </h2>
+                {#if dismissible}
+                    <button class="btn-close" onclick={close}>
+                        <X size={20} />
+                    </button>
+                {/if}
+            </header>
+
+            <div class="modal-body">
+                <div class="search-box">
+                    <Search size={18} class="search-icon" />
+                    <input
+                        type="text"
+                        bind:value={searchQuery}
+                        placeholder="Search for your city..."
+                        autofocus
+                    />
+                </div>
+
+                <button
+                    class="detect-btn"
+                    onclick={detectLocation}
+                    disabled={locating}
+                >
+                    {#if locating}
+                        <LoadingSpinner size="sm" />
+                    {:else}
+                        <Navigation size={18} />
+                    {/if}
+                    <span>Use my current location</span>
+                </button>
+
+                <div class="divider">or choose manually</div>
+
+                <div class="cities-list">
+                    {#if loading}
+                        <div class="loading-state">
+                            <LoadingSpinner size="md" />
+                        </div>
+                    {:else if filteredCities.length === 0}
+                        <div class="empty-state">
+                            <p>No cities found</p>
+                        </div>
+                    {:else}
+                        {#each filteredCities as city}
+                            <button
+                                class="city-item"
+                                class:active={$currentCity?.id === city.id}
+                                onclick={() => selectCity(city)}
+                            >
+                                <div class="city-info">
+                                    <span class="city-name">{city.name}</span>
+                                    <span class="city-state">{city.state}</span>
+                                </div>
+                                {#if $currentCity?.id === city.id}
+                                    <Check size={18} class="text-primary" />
+                                {/if}
+                            </button>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:94:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <MapPin class="w-5 h-5 text-primary" />
+                    Select City
+                </h2>
+                {#if dismissible}
+                    <button class="btn-close" onclick={close}>
+                        <X size={20} />
+                    </button>
+                {/if}
+            </header>
+
+            <div class="modal-body">
+                <div class="search-box">
+                    <Search size={18} class="search-icon" />
+                    <input
+                        type="text"
+                        bind:value={searchQuery}
+                        placeholder="Search for your city..."
+                        autofocus
+                    />
+                </div>
+
+                <button
+                    class="detect-btn"
+                    onclick={detectLocation}
+                    disabled={locating}
+                >
+                    {#if locating}
+                        <LoadingSpinner size="sm" />
+                    {:else}
+                        <Navigation size={18} />
+                    {/if}
+                    <span>Use my current location</span>
+                </button>
+
+                <div class="divider">or choose manually</div>
+
+                <div class="cities-list">
+                    {#if loading}
+                        <div class="loading-state">
+                            <LoadingSpinner size="md" />
+                        </div>
+                    {:else if filteredCities.length === 0}
+                        <div class="empty-state">
+                            <p>No cities found</p>
+                        </div>
+                    {:else}
+                        {#each filteredCities as city}
+                            <button
+                                class="city-item"
+                                class:active={$currentCity?.id === city.id}
+                                onclick={() => selectCity(city)}
+                            >
+                                <div class="city-info">
+                                    <span class="city-name">{city.name}</span>
+                                    <span class="city-state">{city.state}</span>
+                                </div>
+                                {#if $currentCity?.id === city.id}
+                                    <Check size={18} class="text-primary" />
+                                {/if}
+                            </button>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:94:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <MapPin class="w-5 h-5 text-primary" />
+                    Select City
+                </h2>
+                {#if dismissible}
+                    <button class="btn-close" onclick={close}>
+                        <X size={20} />
+                    </button>
+                {/if}
+            </header>
+
+            <div class="modal-body">
+                <div class="search-box">
+                    <Search size={18} class="search-icon" />
+                    <input
+                        type="text"
+                        bind:value={searchQuery}
+                        placeholder="Search for your city..."
+                        autofocus
+                    />
+                </div>
+
+                <button
+                    class="detect-btn"
+                    onclick={detectLocation}
+                    disabled={locating}
+                >
+                    {#if locating}
+                        <LoadingSpinner size="sm" />
+                    {:else}
+                        <Navigation size={18} />
+                    {/if}
+                    <span>Use my current location</span>
+                </button>
+
+                <div class="divider">or choose manually</div>
+
+                <div class="cities-list">
+                    {#if loading}
+                        <div class="loading-state">
+                            <LoadingSpinner size="md" />
+                        </div>
+                    {:else if filteredCities.length === 0}
+                        <div class="empty-state">
+                            <p>No cities found</p>
+                        </div>
+                    {:else}
+                        {#each filteredCities as city}
+                            <button
+                                class="city-item"
+                                class:active={$currentCity?.id === city.id}
+                                onclick={() => selectCity(city)}
+                            >
+                                <div class="city-info">
+                                    <span class="city-name">{city.name}</span>
+                                    <span class="city-state">{city.state}</span>
+                                </div>
+                                {#if $currentCity?.id === city.id}
+                                    <Check size={18} class="text-primary" />
+                                {/if}
+                            </button>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:118:25
+Warn: Avoid using autofocus
+https://svelte.dev/e/a11y_autofocus (svelte)
+                        placeholder="Search for your city..."
+                        autofocus
+                    />
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/CitySelector.svelte:239:5
+Warn: Unused CSS selector ".search-icon"
+https://svelte.dev/e/css_unused_selector (svelte)
+
+    .search-icon {
+        position: absolute;
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/FlagModal.svelte:70:5
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+{#if isOpen}
+    <div
+        class="modal-overlay"
+        transition:fade={{ duration: 200 }}
+        onclick={close}
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <Flag class="w-5 h-5 text-red-500" />
+                    Flag {updateId ? "Update" : "Report"}
+                </h2>
+                <button class="btn-close" onclick={close}>
+                    <X size={20} />
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <div class="info-box">
+                    <AlertTriangle size={16} />
+                    <p>
+                        Flags are reviewed by moderators. False flagging may
+                        lead to account restrictions.
+                    </p>
+                </div>
+
+                {#if !updateId}
+                    <div class="form-group">
+                        <label for="flag-type">Reason</label>
+                        <div class="radio-group">
+                            {#each flagTypes as type}
+                                <label
+                                    class="radio-item"
+                                    class:selected={flagType === type.value}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="flagType"
+                                        value={type.value}
+                                        bind:group={flagType}
+                                    />
+                                    <span>{type.label}</span>
+                                </label>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+
+                <div class="form-group">
+                    <label for="reason">Additional Details</label>
+                    <textarea
+                        id="reason"
+                        bind:value={reason}
+                        placeholder="Please provide more context..."
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" onclick={close}>Cancel</button>
+                <button
+                    class="btn-submit"
+                    onclick={handleSubmit}
+                    disabled={submitting}
+                >
+                    {#if submitting}
+                        Sending...
+                    {:else}
+                        <Flag size={16} />
+                        Submit Flag
+                    {/if}
+                </button>
+            </footer>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/FlagModal.svelte:70:5
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+{#if isOpen}
+    <div
+        class="modal-overlay"
+        transition:fade={{ duration: 200 }}
+        onclick={close}
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <Flag class="w-5 h-5 text-red-500" />
+                    Flag {updateId ? "Update" : "Report"}
+                </h2>
+                <button class="btn-close" onclick={close}>
+                    <X size={20} />
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <div class="info-box">
+                    <AlertTriangle size={16} />
+                    <p>
+                        Flags are reviewed by moderators. False flagging may
+                        lead to account restrictions.
+                    </p>
+                </div>
+
+                {#if !updateId}
+                    <div class="form-group">
+                        <label for="flag-type">Reason</label>
+                        <div class="radio-group">
+                            {#each flagTypes as type}
+                                <label
+                                    class="radio-item"
+                                    class:selected={flagType === type.value}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="flagType"
+                                        value={type.value}
+                                        bind:group={flagType}
+                                    />
+                                    <span>{type.label}</span>
+                                </label>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+
+                <div class="form-group">
+                    <label for="reason">Additional Details</label>
+                    <textarea
+                        id="reason"
+                        bind:value={reason}
+                        placeholder="Please provide more context..."
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" onclick={close}>Cancel</button>
+                <button
+                    class="btn-submit"
+                    onclick={handleSubmit}
+                    disabled={submitting}
+                >
+                    {#if submitting}
+                        Sending...
+                    {:else}
+                        <Flag size={16} />
+                        Submit Flag
+                    {/if}
+                </button>
+            </footer>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/FlagModal.svelte:75:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <Flag class="w-5 h-5 text-red-500" />
+                    Flag {updateId ? "Update" : "Report"}
+                </h2>
+                <button class="btn-close" onclick={close}>
+                    <X size={20} />
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <div class="info-box">
+                    <AlertTriangle size={16} />
+                    <p>
+                        Flags are reviewed by moderators. False flagging may
+                        lead to account restrictions.
+                    </p>
+                </div>
+
+                {#if !updateId}
+                    <div class="form-group">
+                        <label for="flag-type">Reason</label>
+                        <div class="radio-group">
+                            {#each flagTypes as type}
+                                <label
+                                    class="radio-item"
+                                    class:selected={flagType === type.value}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="flagType"
+                                        value={type.value}
+                                        bind:group={flagType}
+                                    />
+                                    <span>{type.label}</span>
+                                </label>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+
+                <div class="form-group">
+                    <label for="reason">Additional Details</label>
+                    <textarea
+                        id="reason"
+                        bind:value={reason}
+                        placeholder="Please provide more context..."
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" onclick={close}>Cancel</button>
+                <button
+                    class="btn-submit"
+                    onclick={handleSubmit}
+                    disabled={submitting}
+                >
+                    {#if submitting}
+                        Sending...
+                    {:else}
+                        <Flag size={16} />
+                        Submit Flag
+                    {/if}
+                </button>
+            </footer>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/FlagModal.svelte:75:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    >
+        <div
+            class="modal-content"
+            transition:scale={{ duration: 200, start: 0.95 }}
+            onclick={(e) => e.stopPropagation()}
+        >
+            <header class="modal-header">
+                <h2>
+                    <Flag class="w-5 h-5 text-red-500" />
+                    Flag {updateId ? "Update" : "Report"}
+                </h2>
+                <button class="btn-close" onclick={close}>
+                    <X size={20} />
+                </button>
+            </header>
+
+            <div class="modal-body">
+                <div class="info-box">
+                    <AlertTriangle size={16} />
+                    <p>
+                        Flags are reviewed by moderators. False flagging may
+                        lead to account restrictions.
+                    </p>
+                </div>
+
+                {#if !updateId}
+                    <div class="form-group">
+                        <label for="flag-type">Reason</label>
+                        <div class="radio-group">
+                            {#each flagTypes as type}
+                                <label
+                                    class="radio-item"
+                                    class:selected={flagType === type.value}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="flagType"
+                                        value={type.value}
+                                        bind:group={flagType}
+                                    />
+                                    <span>{type.label}</span>
+                                </label>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+
+                <div class="form-group">
+                    <label for="reason">Additional Details</label>
+                    <textarea
+                        id="reason"
+                        bind:value={reason}
+                        placeholder="Please provide more context..."
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button class="btn-cancel" onclick={close}>Cancel</button>
+                <button
+                    class="btn-submit"
+                    onclick={handleSubmit}
+                    disabled={submitting}
+                >
+                    {#if submitting}
+                        Sending...
+                    {:else}
+                        <Flag size={16} />
+                        Submit Flag
+                    {/if}
+                </button>
+            </footer>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/LoadingButton.svelte:32:32
+Error: This comparison appears to be unintentional because the types '"primary" | "secondary" | "danger"' and '"success"' have no overlap. (ts)
+	class:loading-button-danger={variant === "danger"}
+	class:loading-button-success={variant === "success"}
+	{type}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/LocationFilter.svelte:182:2
+Warn: Elements with the 'dialog' interactive role must have a tabindex value
+https://svelte.dev/e/a11y_interactive_supports_focus (svelte)
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+	<div
+		class="modal-content"
+		onclick={(e) => e.stopPropagation()}
+		role="dialog"
+		aria-modal="true"
+	>
+		<div class="modal-header">
+			<h3>Filter by Location</h3>
+			<button
+				type="button"
+				class="close-btn"
+				onclick={closeModal}
+				aria-label="Close"
+			>
+				<X size={24} />
+			</button>
+		</div>
+
+		<form onsubmit={handleLocationSearch} class="modal-body">
+			<!-- Use Current Location Button -->
+			<button
+				type="button"
+				class="current-location-btn"
+				onclick={useCurrentLocation}
+				disabled={gettingLocation || searchingLocation}
+			>
+				{#if gettingLocation}
+					<LoadingSpinner size="sm" />
+					<span>Getting location...</span>
+				{:else}
+					<Navigation size={18} />
+					<span>Use Current Location</span>
+				{/if}
+			</button>
+
+			<div class="divider">
+				<span>or search</span>
+			</div>
+
+			<div class="form-group">
+				<label for="location-input" class="label">Location</label>
+				<div class="input-wrapper">
+					<span class="input-icon" aria-hidden="true"
+						><MapPin size={16} /></span
+					>
+					<input
+						id="location-input"
+						type="text"
+						bind:value={locationQuery}
+						placeholder="Search location..."
+						class="text-input"
+						disabled={searchingLocation || gettingLocation}
+					/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="radius-input" class="label">Radius</label>
+				<select
+					id="radius-input"
+					bind:value={radiusKm}
+					onchange={handleRadiusChange}
+					class="select-input"
+				>
+					<option value={1}>1 km</option>
+					<option value={2}>2 km</option>
+					<option value={5}>5 km</option>
+					<option value={10}>10 km</option>
+					<option value={25}>25 km</option>
+					<option value={50}>50 km</option>
+				</select>
+			</div>
+
+			<div class="modal-actions">
+				<button
+					type="submit"
+					class="submit-btn"
+					disabled={searchingLocation || !locationQuery.trim()}
+				>
+					{#if searchingLocation}
+						<LoadingSpinner size="sm" />
+						<span>Searching...</span>
+					{:else}
+						<Search size={16} />
+						<span>Apply Filter</span>
+					{/if}
+				</button>
+
+				{#if filterActive}
+					<button
+						type="button"
+						class="clear-btn"
+						onclick={clearLocationFilter}
+					>
+						<X size={16} />
+						<span>Clear Filter</span>
+					</button>
+				{/if}
+			</div>
+
+			{#if filterActive}
+				<div class="active-indicator">
+					<Target size={14} />
+					<span>Filter active ({radiusKm}km radius)</span>
+				</div>
+			{/if}
+		</form>
+	</div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/LocationFilter.svelte:700:2
+Warn: Unused CSS selector ":global([data-theme="dark"]) .location-result"
+https://svelte.dev/e/css_unused_selector (svelte)
+
+	:global([data-theme="dark"]) .location-result {
+		background: var(--c-bg-surface);
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/LocationFilter.svelte:704:2
+Warn: Unused CSS selector ":global([data-theme="dark"]) .location-result:hover"
+https://svelte.dev/e/css_unused_selector (svelte)
+
+	:global([data-theme="dark"]) .location-result:hover {
+		background: var(--c-bg-subtle);
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/NotificationDropdown.svelte:327:3
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/ResolutionModal.svelte:26:5
+Warn: Elements with the 'dialog' interactive role must have a tabindex value
+https://svelte.dev/e/a11y_interactive_supports_focus (svelte)
+{#if open}
+    <div class="modal-backdrop" onclick={close} role="dialog" aria-modal="true">
+        <div class="modal" onclick={(e) => e.stopPropagation()}>
+            <div class="modal-header">
+                <h2>Resolve Report</h2>
+                <button class="close-btn" onclick={close} aria-label="Close">
+                    <X size={24} />
+                </button>
+            </div>
+
+            <p class="description">
+                Please provide details about how this issue was resolved. This
+                information will be visible to the public.
+            </p>
+
+            <div class="form-group">
+                <label for="resolution-summary">Resolution Details</label>
+                <textarea
+                    id="resolution-summary"
+                    bind:value={summary}
+                    placeholder="E.g. The pothole was filled and resurfaced..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <!-- Placeholder for Image Upload -->
+            <!-- 
+            <div class="form-group">
+                <label>Proof Image (Optional)</label>
+                <input type="text" bind:value={imageUrl} placeholder="https://..." />
+            </div>
+            -->
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick={close}>Cancel</button>
+                <LoadingButton
+                    loading={submitting}
+                    onclick={submit}
+                    disabled={!summary.trim()}
+                    variant="primary"
+                >
+                    Mark as Resolved
+                </LoadingButton>
+            </div>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/ResolutionModal.svelte:26:5
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+{#if open}
+    <div class="modal-backdrop" onclick={close} role="dialog" aria-modal="true">
+        <div class="modal" onclick={(e) => e.stopPropagation()}>
+            <div class="modal-header">
+                <h2>Resolve Report</h2>
+                <button class="close-btn" onclick={close} aria-label="Close">
+                    <X size={24} />
+                </button>
+            </div>
+
+            <p class="description">
+                Please provide details about how this issue was resolved. This
+                information will be visible to the public.
+            </p>
+
+            <div class="form-group">
+                <label for="resolution-summary">Resolution Details</label>
+                <textarea
+                    id="resolution-summary"
+                    bind:value={summary}
+                    placeholder="E.g. The pothole was filled and resurfaced..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <!-- Placeholder for Image Upload -->
+            <!-- 
+            <div class="form-group">
+                <label>Proof Image (Optional)</label>
+                <input type="text" bind:value={imageUrl} placeholder="https://..." />
+            </div>
+            -->
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick={close}>Cancel</button>
+                <LoadingButton
+                    loading={submitting}
+                    onclick={submit}
+                    disabled={!summary.trim()}
+                    variant="primary"
+                >
+                    Mark as Resolved
+                </LoadingButton>
+            </div>
+        </div>
+    </div>
+{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/ResolutionModal.svelte:27:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    <div class="modal-backdrop" onclick={close} role="dialog" aria-modal="true">
+        <div class="modal" onclick={(e) => e.stopPropagation()}>
+            <div class="modal-header">
+                <h2>Resolve Report</h2>
+                <button class="close-btn" onclick={close} aria-label="Close">
+                    <X size={24} />
+                </button>
+            </div>
+
+            <p class="description">
+                Please provide details about how this issue was resolved. This
+                information will be visible to the public.
+            </p>
+
+            <div class="form-group">
+                <label for="resolution-summary">Resolution Details</label>
+                <textarea
+                    id="resolution-summary"
+                    bind:value={summary}
+                    placeholder="E.g. The pothole was filled and resurfaced..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <!-- Placeholder for Image Upload -->
+            <!-- 
+            <div class="form-group">
+                <label>Proof Image (Optional)</label>
+                <input type="text" bind:value={imageUrl} placeholder="https://..." />
+            </div>
+            -->
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick={close}>Cancel</button>
+                <LoadingButton
+                    loading={submitting}
+                    onclick={submit}
+                    disabled={!summary.trim()}
+                    variant="primary"
+                >
+                    Mark as Resolved
+                </LoadingButton>
+            </div>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/lib/components/ResolutionModal.svelte:27:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    <div class="modal-backdrop" onclick={close} role="dialog" aria-modal="true">
+        <div class="modal" onclick={(e) => e.stopPropagation()}>
+            <div class="modal-header">
+                <h2>Resolve Report</h2>
+                <button class="close-btn" onclick={close} aria-label="Close">
+                    <X size={24} />
+                </button>
+            </div>
+
+            <p class="description">
+                Please provide details about how this issue was resolved. This
+                information will be visible to the public.
+            </p>
+
+            <div class="form-group">
+                <label for="resolution-summary">Resolution Details</label>
+                <textarea
+                    id="resolution-summary"
+                    bind:value={summary}
+                    placeholder="E.g. The pothole was filled and resurfaced..."
+                    rows="4"
+                ></textarea>
+            </div>
+
+            <!-- Placeholder for Image Upload -->
+            <!-- 
+            <div class="form-group">
+                <label>Proof Image (Optional)</label>
+                <input type="text" bind:value={imageUrl} placeholder="https://..." />
+            </div>
+            -->
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick={close}>Cancel</button>
+                <LoadingButton
+                    loading={submitting}
+                    onclick={submit}
+                    disabled={!summary.trim()}
+                    variant="primary"
+                >
+                    Mark as Resolved
+                </LoadingButton>
+            </div>
+        </div>
+    </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:1062:2
+Warn: Unused CSS selector ".media-placeholder"
+https://svelte.dev/e/css_unused_selector (svelte)
+
+	.media-placeholder {
+		background: var(--c-bg-subtle);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:1788:2
+Warn: Unused CSS selector ".loading-more"
+https://svelte.dev/e/css_unused_selector (svelte)
+
+	.loading-more {
+		display: flex;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:1524:3
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:227:6
+Error: Cannot find name 'loadMoreReports'. (ts)
+				) {
+					loadMoreReports();
+				}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:602:25
+Error: Property 'user_badges' does not exist on type 'Report'. (ts)
+												@{report.submitted_by}
+												{#if report.user_badges}
+													{#if report.user_badges.includes("local_guide")}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:603:26
+Error: Property 'user_badges' does not exist on type 'Report'. (ts)
+												{#if report.user_badges}
+													{#if report.user_badges.includes("local_guide")}
+														<span
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/+page.svelte:610:26
+Error: Property 'user_badges' does not exist on type 'Report'. (ts)
+													{/if}
+													{#if report.user_badges.includes("official")}
+														<span
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:614:4
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+		{#if mobileMenuOpen}
+			<div
+				class="mobile-overlay"
+				onclick={() => (mobileMenuOpen = false)}
+			></div>
+		{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:614:4
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+		{#if mobileMenuOpen}
+			<div
+				class="mobile-overlay"
+				onclick={() => (mobileMenuOpen = false)}
+			></div>
+		{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1164:3
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+	{#if showStatusModal && selectedReport}
+		<div class="modal-overlay" onclick={() => (showStatusModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Update Report Status</h2>
+				<p class="report-info">Report: {selectedReport.title}</p>
+
+				<div class="form-group">
+					<label>New Status</label>
+					<select bind:value={newStatus}>
+						<option value="VERIFIED">Verified</option>
+						<option value="IN_PROGRESS">In Progress</option>
+						<option value="RESOLVED">Resolved</option>
+						<option value="REJECTED">Rejected</option>
+						<option value="FLAGGED">Flagged</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Note (optional)</label>
+					<textarea
+						bind:value={statusNote}
+						rows="3"
+						placeholder="Add a note..."
+					></textarea>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showStatusModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleUpdateStatus}
+						disabled={updating}
+					>
+						{updating ? "Updating..." : "Update Status"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1164:3
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+	{#if showStatusModal && selectedReport}
+		<div class="modal-overlay" onclick={() => (showStatusModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Update Report Status</h2>
+				<p class="report-info">Report: {selectedReport.title}</p>
+
+				<div class="form-group">
+					<label>New Status</label>
+					<select bind:value={newStatus}>
+						<option value="VERIFIED">Verified</option>
+						<option value="IN_PROGRESS">In Progress</option>
+						<option value="RESOLVED">Resolved</option>
+						<option value="REJECTED">Rejected</option>
+						<option value="FLAGGED">Flagged</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Note (optional)</label>
+					<textarea
+						bind:value={statusNote}
+						rows="3"
+						placeholder="Add a note..."
+					></textarea>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showStatusModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleUpdateStatus}
+						disabled={updating}
+					>
+						{updating ? "Updating..." : "Update Status"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1165:4
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+		<div class="modal-overlay" onclick={() => (showStatusModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Update Report Status</h2>
+				<p class="report-info">Report: {selectedReport.title}</p>
+
+				<div class="form-group">
+					<label>New Status</label>
+					<select bind:value={newStatus}>
+						<option value="VERIFIED">Verified</option>
+						<option value="IN_PROGRESS">In Progress</option>
+						<option value="RESOLVED">Resolved</option>
+						<option value="REJECTED">Rejected</option>
+						<option value="FLAGGED">Flagged</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Note (optional)</label>
+					<textarea
+						bind:value={statusNote}
+						rows="3"
+						placeholder="Add a note..."
+					></textarea>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showStatusModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleUpdateStatus}
+						disabled={updating}
+					>
+						{updating ? "Updating..." : "Update Status"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1165:4
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+		<div class="modal-overlay" onclick={() => (showStatusModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Update Report Status</h2>
+				<p class="report-info">Report: {selectedReport.title}</p>
+
+				<div class="form-group">
+					<label>New Status</label>
+					<select bind:value={newStatus}>
+						<option value="VERIFIED">Verified</option>
+						<option value="IN_PROGRESS">In Progress</option>
+						<option value="RESOLVED">Resolved</option>
+						<option value="REJECTED">Rejected</option>
+						<option value="FLAGGED">Flagged</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Note (optional)</label>
+					<textarea
+						bind:value={statusNote}
+						rows="3"
+						placeholder="Add a note..."
+					></textarea>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showStatusModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleUpdateStatus}
+						disabled={updating}
+					>
+						{updating ? "Updating..." : "Update Status"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1170:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>New Status</label>
+					<select bind:value={newStatus}>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1181:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Note (optional)</label>
+					<textarea
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1208:3
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+	{#if showDetailModal && detailReport}
+		<div class="modal-overlay" onclick={() => (showDetailModal = false)}>
+			<div class="modal modal-large" onclick={(e) => e.stopPropagation()}>
+				<div class="detail-header">
+					<h2>{detailReport.title}</h2>
+					<button
+						class="close-btn"
+						onclick={() => (showDetailModal = false)}>×</button
+					>
+				</div>
+
+				<div class="detail-content">
+					<!-- Left column: Images and Description -->
+					<div class="detail-main">
+						{#if detailReport.image_urls && detailReport.image_urls.length > 0}
+							<div class="image-gallery">
+								{#each detailReport.image_urls as url}
+									<img src={url} alt="Report image" />
+								{/each}
+							</div>
+						{:else}
+							<div class="no-images">No images attached</div>
+						{/if}
+
+						<div class="description-section">
+							<h3>Description</h3>
+							<p>
+								{detailReport.description ||
+									"No description provided"}
+							</p>
+						</div>
+
+						{#if (detailReport as any).ai_analysis}
+							<div class="ai-section">
+								<h3>AI Analysis</h3>
+								<pre>{JSON.stringify(
+										(detailReport as any).ai_analysis,
+										null,
+										2,
+									)}</pre>
+							</div>
+						{/if}
+					</div>
+
+					<!-- Right column: Meta info -->
+					<div class="detail-sidebar">
+						<div class="meta-card">
+							<h4>Status</h4>
+							<span
+								class="status-badge status-{detailReport.status.toLowerCase()}"
+								>{detailReport.status}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Category</h4>
+							<span>{detailReport.category}</span>
+						</div>
+
+						<div class="meta-card">
+							<h4>Severity</h4>
+							<span class="severity-{detailReport.severity}"
+								>{detailReport.severity}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Submitted By</h4>
+							<span
+								>{detailReport.submitted_by ||
+									"Anonymous"}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Location</h4>
+							<span
+								>{detailReport.address ||
+									`${detailReport.latitude?.toFixed(4)}, ${detailReport.longitude?.toFixed(4)}`}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Created</h4>
+							<span>{formatDate(detailReport.created_at)}</span>
+						</div>
+
+						{#if (detailReport as any).assigned_municipality}
+							<div class="meta-card">
+								<h4>Assigned To</h4>
+								<span
+									>{(detailReport as any)
+										.assigned_municipality}</span
+								>
+							</div>
+						{/if}
+
+						<div class="meta-card">
+							<h4>Engagement</h4>
+							<span
+								>👍 {detailReport.upvote_count} upvotes • 💬 {detailReport.comment_count}
+								comments</span
+							>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showDetailModal = false)}>Close</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openStatusModal(detailReport);
+						}}>Update Status</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openAssignModal(detailReport);
+						}}>Assign</button
+					>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1208:3
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+	{#if showDetailModal && detailReport}
+		<div class="modal-overlay" onclick={() => (showDetailModal = false)}>
+			<div class="modal modal-large" onclick={(e) => e.stopPropagation()}>
+				<div class="detail-header">
+					<h2>{detailReport.title}</h2>
+					<button
+						class="close-btn"
+						onclick={() => (showDetailModal = false)}>×</button
+					>
+				</div>
+
+				<div class="detail-content">
+					<!-- Left column: Images and Description -->
+					<div class="detail-main">
+						{#if detailReport.image_urls && detailReport.image_urls.length > 0}
+							<div class="image-gallery">
+								{#each detailReport.image_urls as url}
+									<img src={url} alt="Report image" />
+								{/each}
+							</div>
+						{:else}
+							<div class="no-images">No images attached</div>
+						{/if}
+
+						<div class="description-section">
+							<h3>Description</h3>
+							<p>
+								{detailReport.description ||
+									"No description provided"}
+							</p>
+						</div>
+
+						{#if (detailReport as any).ai_analysis}
+							<div class="ai-section">
+								<h3>AI Analysis</h3>
+								<pre>{JSON.stringify(
+										(detailReport as any).ai_analysis,
+										null,
+										2,
+									)}</pre>
+							</div>
+						{/if}
+					</div>
+
+					<!-- Right column: Meta info -->
+					<div class="detail-sidebar">
+						<div class="meta-card">
+							<h4>Status</h4>
+							<span
+								class="status-badge status-{detailReport.status.toLowerCase()}"
+								>{detailReport.status}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Category</h4>
+							<span>{detailReport.category}</span>
+						</div>
+
+						<div class="meta-card">
+							<h4>Severity</h4>
+							<span class="severity-{detailReport.severity}"
+								>{detailReport.severity}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Submitted By</h4>
+							<span
+								>{detailReport.submitted_by ||
+									"Anonymous"}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Location</h4>
+							<span
+								>{detailReport.address ||
+									`${detailReport.latitude?.toFixed(4)}, ${detailReport.longitude?.toFixed(4)}`}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Created</h4>
+							<span>{formatDate(detailReport.created_at)}</span>
+						</div>
+
+						{#if (detailReport as any).assigned_municipality}
+							<div class="meta-card">
+								<h4>Assigned To</h4>
+								<span
+									>{(detailReport as any)
+										.assigned_municipality}</span
+								>
+							</div>
+						{/if}
+
+						<div class="meta-card">
+							<h4>Engagement</h4>
+							<span
+								>👍 {detailReport.upvote_count} upvotes • 💬 {detailReport.comment_count}
+								comments</span
+							>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showDetailModal = false)}>Close</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openStatusModal(detailReport);
+						}}>Update Status</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openAssignModal(detailReport);
+						}}>Assign</button
+					>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1209:4
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+		<div class="modal-overlay" onclick={() => (showDetailModal = false)}>
+			<div class="modal modal-large" onclick={(e) => e.stopPropagation()}>
+				<div class="detail-header">
+					<h2>{detailReport.title}</h2>
+					<button
+						class="close-btn"
+						onclick={() => (showDetailModal = false)}>×</button
+					>
+				</div>
+
+				<div class="detail-content">
+					<!-- Left column: Images and Description -->
+					<div class="detail-main">
+						{#if detailReport.image_urls && detailReport.image_urls.length > 0}
+							<div class="image-gallery">
+								{#each detailReport.image_urls as url}
+									<img src={url} alt="Report image" />
+								{/each}
+							</div>
+						{:else}
+							<div class="no-images">No images attached</div>
+						{/if}
+
+						<div class="description-section">
+							<h3>Description</h3>
+							<p>
+								{detailReport.description ||
+									"No description provided"}
+							</p>
+						</div>
+
+						{#if (detailReport as any).ai_analysis}
+							<div class="ai-section">
+								<h3>AI Analysis</h3>
+								<pre>{JSON.stringify(
+										(detailReport as any).ai_analysis,
+										null,
+										2,
+									)}</pre>
+							</div>
+						{/if}
+					</div>
+
+					<!-- Right column: Meta info -->
+					<div class="detail-sidebar">
+						<div class="meta-card">
+							<h4>Status</h4>
+							<span
+								class="status-badge status-{detailReport.status.toLowerCase()}"
+								>{detailReport.status}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Category</h4>
+							<span>{detailReport.category}</span>
+						</div>
+
+						<div class="meta-card">
+							<h4>Severity</h4>
+							<span class="severity-{detailReport.severity}"
+								>{detailReport.severity}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Submitted By</h4>
+							<span
+								>{detailReport.submitted_by ||
+									"Anonymous"}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Location</h4>
+							<span
+								>{detailReport.address ||
+									`${detailReport.latitude?.toFixed(4)}, ${detailReport.longitude?.toFixed(4)}`}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Created</h4>
+							<span>{formatDate(detailReport.created_at)}</span>
+						</div>
+
+						{#if (detailReport as any).assigned_municipality}
+							<div class="meta-card">
+								<h4>Assigned To</h4>
+								<span
+									>{(detailReport as any)
+										.assigned_municipality}</span
+								>
+							</div>
+						{/if}
+
+						<div class="meta-card">
+							<h4>Engagement</h4>
+							<span
+								>👍 {detailReport.upvote_count} upvotes • 💬 {detailReport.comment_count}
+								comments</span
+							>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showDetailModal = false)}>Close</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openStatusModal(detailReport);
+						}}>Update Status</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openAssignModal(detailReport);
+						}}>Assign</button
+					>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1209:4
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+		<div class="modal-overlay" onclick={() => (showDetailModal = false)}>
+			<div class="modal modal-large" onclick={(e) => e.stopPropagation()}>
+				<div class="detail-header">
+					<h2>{detailReport.title}</h2>
+					<button
+						class="close-btn"
+						onclick={() => (showDetailModal = false)}>×</button
+					>
+				</div>
+
+				<div class="detail-content">
+					<!-- Left column: Images and Description -->
+					<div class="detail-main">
+						{#if detailReport.image_urls && detailReport.image_urls.length > 0}
+							<div class="image-gallery">
+								{#each detailReport.image_urls as url}
+									<img src={url} alt="Report image" />
+								{/each}
+							</div>
+						{:else}
+							<div class="no-images">No images attached</div>
+						{/if}
+
+						<div class="description-section">
+							<h3>Description</h3>
+							<p>
+								{detailReport.description ||
+									"No description provided"}
+							</p>
+						</div>
+
+						{#if (detailReport as any).ai_analysis}
+							<div class="ai-section">
+								<h3>AI Analysis</h3>
+								<pre>{JSON.stringify(
+										(detailReport as any).ai_analysis,
+										null,
+										2,
+									)}</pre>
+							</div>
+						{/if}
+					</div>
+
+					<!-- Right column: Meta info -->
+					<div class="detail-sidebar">
+						<div class="meta-card">
+							<h4>Status</h4>
+							<span
+								class="status-badge status-{detailReport.status.toLowerCase()}"
+								>{detailReport.status}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Category</h4>
+							<span>{detailReport.category}</span>
+						</div>
+
+						<div class="meta-card">
+							<h4>Severity</h4>
+							<span class="severity-{detailReport.severity}"
+								>{detailReport.severity}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Submitted By</h4>
+							<span
+								>{detailReport.submitted_by ||
+									"Anonymous"}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Location</h4>
+							<span
+								>{detailReport.address ||
+									`${detailReport.latitude?.toFixed(4)}, ${detailReport.longitude?.toFixed(4)}`}</span
+							>
+						</div>
+
+						<div class="meta-card">
+							<h4>Created</h4>
+							<span>{formatDate(detailReport.created_at)}</span>
+						</div>
+
+						{#if (detailReport as any).assigned_municipality}
+							<div class="meta-card">
+								<h4>Assigned To</h4>
+								<span
+									>{(detailReport as any)
+										.assigned_municipality}</span
+								>
+							</div>
+						{/if}
+
+						<div class="meta-card">
+							<h4>Engagement</h4>
+							<span
+								>👍 {detailReport.upvote_count} upvotes • 💬 {detailReport.comment_count}
+								comments</span
+							>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showDetailModal = false)}>Close</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openStatusModal(detailReport);
+						}}>Update Status</button
+					>
+					<button
+						class="btn-primary"
+						onclick={() => {
+							showDetailModal = false;
+							openAssignModal(detailReport);
+						}}>Assign</button
+					>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1224:10
+Warn: Screenreaders already announce `<img>` elements as an image
+https://svelte.dev/e/a11y_img_redundant_alt (svelte)
+								{#each detailReport.image_urls as url}
+									<img src={url} alt="Report image" />
+								{/each}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1338:3
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+	{#if showAssignModal && reportToAssign}
+		<div class="modal-overlay" onclick={() => (showAssignModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Assign Report</h2>
+				<p class="report-info">Report: {reportToAssign.title}</p>
+
+				<div class="form-group">
+					<label>Municipality</label>
+					<select bind:value={selectedMunicipality}>
+						<option value="">Select Municipality...</option>
+						{#each municipalities as mun}
+							<option value={mun.id}
+								>{mun.name} ({mun.short_code ||
+									mun.state})</option
+							>
+						{/each}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Department (optional)</label>
+					<select bind:value={selectedDepartment}>
+						<option value="">Select Department...</option>
+						{#each departments as dept}
+							<option value={dept.id}>{dept.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showAssignModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleAssignReport}
+						disabled={assigning || !selectedMunicipality}
+					>
+						{assigning ? "Assigning..." : "Assign Report"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1338:3
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+	{#if showAssignModal && reportToAssign}
+		<div class="modal-overlay" onclick={() => (showAssignModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Assign Report</h2>
+				<p class="report-info">Report: {reportToAssign.title}</p>
+
+				<div class="form-group">
+					<label>Municipality</label>
+					<select bind:value={selectedMunicipality}>
+						<option value="">Select Municipality...</option>
+						{#each municipalities as mun}
+							<option value={mun.id}
+								>{mun.name} ({mun.short_code ||
+									mun.state})</option
+							>
+						{/each}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Department (optional)</label>
+					<select bind:value={selectedDepartment}>
+						<option value="">Select Department...</option>
+						{#each departments as dept}
+							<option value={dept.id}>{dept.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showAssignModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleAssignReport}
+						disabled={assigning || !selectedMunicipality}
+					>
+						{assigning ? "Assigning..." : "Assign Report"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1339:4
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+		<div class="modal-overlay" onclick={() => (showAssignModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Assign Report</h2>
+				<p class="report-info">Report: {reportToAssign.title}</p>
+
+				<div class="form-group">
+					<label>Municipality</label>
+					<select bind:value={selectedMunicipality}>
+						<option value="">Select Municipality...</option>
+						{#each municipalities as mun}
+							<option value={mun.id}
+								>{mun.name} ({mun.short_code ||
+									mun.state})</option
+							>
+						{/each}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Department (optional)</label>
+					<select bind:value={selectedDepartment}>
+						<option value="">Select Department...</option>
+						{#each departments as dept}
+							<option value={dept.id}>{dept.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showAssignModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleAssignReport}
+						disabled={assigning || !selectedMunicipality}
+					>
+						{assigning ? "Assigning..." : "Assign Report"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1339:4
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+		<div class="modal-overlay" onclick={() => (showAssignModal = false)}>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Assign Report</h2>
+				<p class="report-info">Report: {reportToAssign.title}</p>
+
+				<div class="form-group">
+					<label>Municipality</label>
+					<select bind:value={selectedMunicipality}>
+						<option value="">Select Municipality...</option>
+						{#each municipalities as mun}
+							<option value={mun.id}
+								>{mun.name} ({mun.short_code ||
+									mun.state})</option
+							>
+						{/each}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Department (optional)</label>
+					<select bind:value={selectedDepartment}>
+						<option value="">Select Department...</option>
+						{#each departments as dept}
+							<option value={dept.id}>{dept.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showAssignModal = false)}>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleAssignReport}
+						disabled={assigning || !selectedMunicipality}
+					>
+						{assigning ? "Assigning..." : "Assign Report"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1344:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Municipality</label>
+					<select bind:value={selectedMunicipality}>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1357:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Department (optional)</label>
+					<select bind:value={selectedDepartment}>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1385:3
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+	{#if showCreateAdminModal}
+		<div
+			class="modal-overlay"
+			onclick={() => (showCreateAdminModal = false)}
+		>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Create New Admin</h2>
+
+				<div class="form-group">
+					<label>Email</label>
+					<input
+						type="email"
+						bind:value={newAdminEmail}
+						placeholder="admin@example.com"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Password</label>
+					<input
+						type="password"
+						bind:value={newAdminPassword}
+						placeholder="Enter a secure password"
+						required
+						minlength="8"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Role</label>
+					<select bind:value={newAdminRole}>
+						<option value="moderator">Moderator</option>
+						<option value="super_admin">Super Admin</option>
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showCreateAdminModal = false)}
+						>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleCreateAdmin}
+						disabled={creatingAdmin}
+					>
+						{creatingAdmin ? "Creating..." : "Create Admin"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1385:3
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+	{#if showCreateAdminModal}
+		<div
+			class="modal-overlay"
+			onclick={() => (showCreateAdminModal = false)}
+		>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Create New Admin</h2>
+
+				<div class="form-group">
+					<label>Email</label>
+					<input
+						type="email"
+						bind:value={newAdminEmail}
+						placeholder="admin@example.com"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Password</label>
+					<input
+						type="password"
+						bind:value={newAdminPassword}
+						placeholder="Enter a secure password"
+						required
+						minlength="8"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Role</label>
+					<select bind:value={newAdminRole}>
+						<option value="moderator">Moderator</option>
+						<option value="super_admin">Super Admin</option>
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showCreateAdminModal = false)}
+						>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleCreateAdmin}
+						disabled={creatingAdmin}
+					>
+						{creatingAdmin ? "Creating..." : "Create Admin"}
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1389:4
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+		>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Create New Admin</h2>
+
+				<div class="form-group">
+					<label>Email</label>
+					<input
+						type="email"
+						bind:value={newAdminEmail}
+						placeholder="admin@example.com"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Password</label>
+					<input
+						type="password"
+						bind:value={newAdminPassword}
+						placeholder="Enter a secure password"
+						required
+						minlength="8"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Role</label>
+					<select bind:value={newAdminRole}>
+						<option value="moderator">Moderator</option>
+						<option value="super_admin">Super Admin</option>
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showCreateAdminModal = false)}
+						>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleCreateAdmin}
+						disabled={creatingAdmin}
+					>
+						{creatingAdmin ? "Creating..." : "Create Admin"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1389:4
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+		>
+			<div class="modal" onclick={(e) => e.stopPropagation()}>
+				<h2>Create New Admin</h2>
+
+				<div class="form-group">
+					<label>Email</label>
+					<input
+						type="email"
+						bind:value={newAdminEmail}
+						placeholder="admin@example.com"
+						required
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Password</label>
+					<input
+						type="password"
+						bind:value={newAdminPassword}
+						placeholder="Enter a secure password"
+						required
+						minlength="8"
+					/>
+				</div>
+
+				<div class="form-group">
+					<label>Role</label>
+					<select bind:value={newAdminRole}>
+						<option value="moderator">Moderator</option>
+						<option value="super_admin">Super Admin</option>
+					</select>
+				</div>
+
+				<div class="modal-actions">
+					<button
+						class="btn-secondary"
+						onclick={() => (showCreateAdminModal = false)}
+						>Cancel</button
+					>
+					<button
+						class="btn-primary"
+						onclick={handleCreateAdmin}
+						disabled={creatingAdmin}
+					>
+						{creatingAdmin ? "Creating..." : "Create Admin"}
+					</button>
+				</div>
+			</div>
+		</div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1393:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Email</label>
+					<input
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1403:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Password</label>
+					<input
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1414:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Role</label>
+					<select bind:value={newAdminRole}>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1307:68
+Error: Property 'comment_count' does not exist on type 'Report'. Did you mean 'comments_count'? (ts)
+							<span
+								>👍 {detailReport.upvote_count} upvotes • 💬 {detailReport.comment_count}
+								comments</span
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1323:24
+Error: Argument of type 'Report | null' is not assignable to parameter of type 'Report'.
+  Type 'null' is not assignable to type 'Report'. (ts)
+							showDetailModal = false;
+							openStatusModal(detailReport);
+						}}>Update Status</button
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/admin/+page.svelte:1330:24
+Error: Argument of type 'Report | null' is not assignable to parameter of type 'Report'.
+  Type 'null' is not assignable to type 'Report'. (ts)
+							showDetailModal = false;
+							openAssignModal(detailReport);
+						}}>Assign</button
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+layout.svelte:93:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    {#if mobileMenuOpen}
+        <div
+            class="mobile-overlay"
+            onclick={() => (mobileMenuOpen = false)}
+        ></div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+layout.svelte:93:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    {#if mobileMenuOpen}
+        <div
+            class="mobile-overlay"
+            onclick={() => (mobileMenuOpen = false)}
+        ></div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:311:29
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+                        {#each filteredReports() as report}
+                            <div
+                                class="report-card"
+                                onclick={() => openReportModal(report)}
+                            >
+                                <div class="report-main">
+                                    <div class="report-header">
+                                        <span class="report-category"
+                                            >{report.category}</span
+                                        >
+                                        <span class="report-time"
+                                            >{formatTime(
+                                                report.created_at,
+                                            )}</span
+                                        >
+                                    </div>
+                                    <h3 class="report-title">{report.title}</h3>
+                                    <div class="report-location">
+                                        <MapPin size={14} />
+                                        <span
+                                            >{report.location ||
+                                                report.address ||
+                                                "Location unavailable"}</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="report-meta">
+                                    <span
+                                        class="severity-badge {getSeverityClass(
+                                            report.severity,
+                                        )}"
+                                    >
+                                        {report.severity}/10
+                                    </span>
+                                    <span
+                                        class="status-badge {getStatusBadgeClass(
+                                            report.status,
+                                        )}"
+                                    >
+                                        {report.status.replace(/_/g, " ")}
+                                    </span>
+                                    <ChevronRight
+                                        size={18}
+                                        class="report-arrow"
+                                    />
+                                </div>
+                            </div>
+                        {/each}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:311:29
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+                        {#each filteredReports() as report}
+                            <div
+                                class="report-card"
+                                onclick={() => openReportModal(report)}
+                            >
+                                <div class="report-main">
+                                    <div class="report-header">
+                                        <span class="report-category"
+                                            >{report.category}</span
+                                        >
+                                        <span class="report-time"
+                                            >{formatTime(
+                                                report.created_at,
+                                            )}</span
+                                        >
+                                    </div>
+                                    <h3 class="report-title">{report.title}</h3>
+                                    <div class="report-location">
+                                        <MapPin size={14} />
+                                        <span
+                                            >{report.location ||
+                                                report.address ||
+                                                "Location unavailable"}</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="report-meta">
+                                    <span
+                                        class="severity-badge {getSeverityClass(
+                                            report.severity,
+                                        )}"
+                                    >
+                                        {report.severity}/10
+                                    </span>
+                                    <span
+                                        class="status-badge {getStatusBadgeClass(
+                                            report.status,
+                                        )}"
+                                    >
+                                        {report.status.replace(/_/g, " ")}
+                                    </span>
+                                    <ChevronRight
+                                        size={18}
+                                        class="report-arrow"
+                                    />
+                                </div>
+                            </div>
+                        {/each}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:366:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    {#if showReportModal && selectedReport}
+        <div class="modal-overlay" onclick={closeReportModal}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2>{selectedReport.title}</h2>
+                    <button class="btn-close" onclick={closeReportModal}
+                        >×</button
+                    >
+                </header>
+
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value"
+                            >{selectedReport.category}</span
+                        >
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span
+                            class="status-badge {getStatusBadgeClass(
+                                selectedReport.status,
+                            )}"
+                        >
+                            {selectedReport.status.replace(/_/g, " ")}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Severity</span>
+                        <span
+                            class="severity-badge {getSeverityClass(
+                                selectedReport.severity,
+                            )}"
+                        >
+                            {selectedReport.severity}/10
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value"
+                            >{selectedReport.location ||
+                                selectedReport.address}</span
+                        >
+                    </div>
+                    {#if selectedReport.description}
+                        <div class="detail-row full">
+                            <span class="detail-label">Description</span>
+                            <p class="detail-value">
+                                {selectedReport.description}
+                            </p>
+                        </div>
+                    {/if}
+                </div>
+
+                <footer class="modal-footer">
+                    <button class="btn-secondary" onclick={closeReportModal}
+                        >Close</button
+                    >
+                    <a href="/report/{selectedReport.id}" class="btn-primary">
+                        <Eye size={16} /> View Full Report
+                    </a>
+                </footer>
+            </div>
+        </div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:366:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    {#if showReportModal && selectedReport}
+        <div class="modal-overlay" onclick={closeReportModal}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2>{selectedReport.title}</h2>
+                    <button class="btn-close" onclick={closeReportModal}
+                        >×</button
+                    >
+                </header>
+
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value"
+                            >{selectedReport.category}</span
+                        >
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span
+                            class="status-badge {getStatusBadgeClass(
+                                selectedReport.status,
+                            )}"
+                        >
+                            {selectedReport.status.replace(/_/g, " ")}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Severity</span>
+                        <span
+                            class="severity-badge {getSeverityClass(
+                                selectedReport.severity,
+                            )}"
+                        >
+                            {selectedReport.severity}/10
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value"
+                            >{selectedReport.location ||
+                                selectedReport.address}</span
+                        >
+                    </div>
+                    {#if selectedReport.description}
+                        <div class="detail-row full">
+                            <span class="detail-label">Description</span>
+                            <p class="detail-value">
+                                {selectedReport.description}
+                            </p>
+                        </div>
+                    {/if}
+                </div>
+
+                <footer class="modal-footer">
+                    <button class="btn-secondary" onclick={closeReportModal}
+                        >Close</button
+                    >
+                    <a href="/report/{selectedReport.id}" class="btn-primary">
+                        <Eye size={16} /> View Full Report
+                    </a>
+                </footer>
+            </div>
+        </div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:367:13
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+        <div class="modal-overlay" onclick={closeReportModal}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2>{selectedReport.title}</h2>
+                    <button class="btn-close" onclick={closeReportModal}
+                        >×</button
+                    >
+                </header>
+
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value"
+                            >{selectedReport.category}</span
+                        >
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span
+                            class="status-badge {getStatusBadgeClass(
+                                selectedReport.status,
+                            )}"
+                        >
+                            {selectedReport.status.replace(/_/g, " ")}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Severity</span>
+                        <span
+                            class="severity-badge {getSeverityClass(
+                                selectedReport.severity,
+                            )}"
+                        >
+                            {selectedReport.severity}/10
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value"
+                            >{selectedReport.location ||
+                                selectedReport.address}</span
+                        >
+                    </div>
+                    {#if selectedReport.description}
+                        <div class="detail-row full">
+                            <span class="detail-label">Description</span>
+                            <p class="detail-value">
+                                {selectedReport.description}
+                            </p>
+                        </div>
+                    {/if}
+                </div>
+
+                <footer class="modal-footer">
+                    <button class="btn-secondary" onclick={closeReportModal}
+                        >Close</button
+                    >
+                    <a href="/report/{selectedReport.id}" class="btn-primary">
+                        <Eye size={16} /> View Full Report
+                    </a>
+                </footer>
+            </div>
+        </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/+page.svelte:367:13
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+        <div class="modal-overlay" onclick={closeReportModal}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2>{selectedReport.title}</h2>
+                    <button class="btn-close" onclick={closeReportModal}
+                        >×</button
+                    >
+                </header>
+
+                <div class="modal-body">
+                    <div class="detail-row">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value"
+                            >{selectedReport.category}</span
+                        >
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span
+                            class="status-badge {getStatusBadgeClass(
+                                selectedReport.status,
+                            )}"
+                        >
+                            {selectedReport.status.replace(/_/g, " ")}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Severity</span>
+                        <span
+                            class="severity-badge {getSeverityClass(
+                                selectedReport.severity,
+                            )}"
+                        >
+                            {selectedReport.severity}/10
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value"
+                            >{selectedReport.location ||
+                                selectedReport.address}</span
+                        >
+                    </div>
+                    {#if selectedReport.description}
+                        <div class="detail-row full">
+                            <span class="detail-label">Description</span>
+                            <p class="detail-value">
+                                {selectedReport.description}
+                            </p>
+                        </div>
+                    {/if}
+                </div>
+
+                <footer class="modal-footer">
+                    <button class="btn-secondary" onclick={closeReportModal}
+                        >Close</button
+                    >
+                    <a href="/report/{selectedReport.id}" class="btn-primary">
+                        <Eye size={16} /> View Full Report
+                    </a>
+                </footer>
+            </div>
+        </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/alerts/+page.svelte:335:9
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+    {#if showBroadcastModal}
+        <div class="modal-overlay" onclick={() => (showBroadcastModal = false)}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2><Zap size={20} /> Create Broadcast</h2>
+                    <button
+                        class="btn-close"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </header>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="alert-title">Title *</label>
+                        <input
+                            id="alert-title"
+                            type="text"
+                            placeholder="Brief alert title..."
+                            bind:value={newAlert.title}
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-description">Description</label>
+                        <textarea
+                            id="alert-description"
+                            placeholder="Detailed information..."
+                            rows="3"
+                            bind:value={newAlert.description}
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-category">Category</label>
+                            <select
+                                id="alert-category"
+                                bind:value={newAlert.category}
+                            >
+                                {#each categories as cat}
+                                    <option value={cat.value}
+                                        >{cat.icon} {cat.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-severity">Severity</label>
+                            <select
+                                id="alert-severity"
+                                bind:value={newAlert.severity}
+                            >
+                                {#each severities as sev}
+                                    <option value={sev.value}
+                                        >{sev.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-radius">Radius (km)</label>
+                            <input
+                                id="alert-radius"
+                                type="number"
+                                min="1"
+                                max="50"
+                                bind:value={newAlert.radius_meters}
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-expiry">Expires in (hours)</label>
+                            <input
+                                id="alert-expiry"
+                                type="number"
+                                min="1"
+                                max="168"
+                                bind:value={newAlert.expires_in_hours}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button
+                        class="btn-secondary"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn-broadcast"
+                        onclick={handleBroadcast}
+                        disabled={sending || !newAlert.title.trim()}
+                    >
+                        <Send size={16} />
+                        {sending ? "Sending..." : "Send Broadcast"}
+                    </button>
+                </footer>
+            </div>
+        </div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/alerts/+page.svelte:335:9
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+    {#if showBroadcastModal}
+        <div class="modal-overlay" onclick={() => (showBroadcastModal = false)}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2><Zap size={20} /> Create Broadcast</h2>
+                    <button
+                        class="btn-close"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </header>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="alert-title">Title *</label>
+                        <input
+                            id="alert-title"
+                            type="text"
+                            placeholder="Brief alert title..."
+                            bind:value={newAlert.title}
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-description">Description</label>
+                        <textarea
+                            id="alert-description"
+                            placeholder="Detailed information..."
+                            rows="3"
+                            bind:value={newAlert.description}
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-category">Category</label>
+                            <select
+                                id="alert-category"
+                                bind:value={newAlert.category}
+                            >
+                                {#each categories as cat}
+                                    <option value={cat.value}
+                                        >{cat.icon} {cat.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-severity">Severity</label>
+                            <select
+                                id="alert-severity"
+                                bind:value={newAlert.severity}
+                            >
+                                {#each severities as sev}
+                                    <option value={sev.value}
+                                        >{sev.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-radius">Radius (km)</label>
+                            <input
+                                id="alert-radius"
+                                type="number"
+                                min="1"
+                                max="50"
+                                bind:value={newAlert.radius_meters}
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-expiry">Expires in (hours)</label>
+                            <input
+                                id="alert-expiry"
+                                type="number"
+                                min="1"
+                                max="168"
+                                bind:value={newAlert.expires_in_hours}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button
+                        class="btn-secondary"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn-broadcast"
+                        onclick={handleBroadcast}
+                        disabled={sending || !newAlert.title.trim()}
+                    >
+                        <Send size={16} />
+                        {sending ? "Sending..." : "Send Broadcast"}
+                    </button>
+                </footer>
+            </div>
+        </div>
+    {/if}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/alerts/+page.svelte:336:13
+Warn: Visible, non-interactive elements with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+        <div class="modal-overlay" onclick={() => (showBroadcastModal = false)}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2><Zap size={20} /> Create Broadcast</h2>
+                    <button
+                        class="btn-close"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </header>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="alert-title">Title *</label>
+                        <input
+                            id="alert-title"
+                            type="text"
+                            placeholder="Brief alert title..."
+                            bind:value={newAlert.title}
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-description">Description</label>
+                        <textarea
+                            id="alert-description"
+                            placeholder="Detailed information..."
+                            rows="3"
+                            bind:value={newAlert.description}
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-category">Category</label>
+                            <select
+                                id="alert-category"
+                                bind:value={newAlert.category}
+                            >
+                                {#each categories as cat}
+                                    <option value={cat.value}
+                                        >{cat.icon} {cat.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-severity">Severity</label>
+                            <select
+                                id="alert-severity"
+                                bind:value={newAlert.severity}
+                            >
+                                {#each severities as sev}
+                                    <option value={sev.value}
+                                        >{sev.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-radius">Radius (km)</label>
+                            <input
+                                id="alert-radius"
+                                type="number"
+                                min="1"
+                                max="50"
+                                bind:value={newAlert.radius_meters}
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-expiry">Expires in (hours)</label>
+                            <input
+                                id="alert-expiry"
+                                type="number"
+                                min="1"
+                                max="168"
+                                bind:value={newAlert.expires_in_hours}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button
+                        class="btn-secondary"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn-broadcast"
+                        onclick={handleBroadcast}
+                        disabled={sending || !newAlert.title.trim()}
+                    >
+                        <Send size={16} />
+                        {sending ? "Sending..." : "Send Broadcast"}
+                    </button>
+                </footer>
+            </div>
+        </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/alerts/+page.svelte:336:13
+Warn: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+        <div class="modal-overlay" onclick={() => (showBroadcastModal = false)}>
+            <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+                <header class="modal-header">
+                    <h2><Zap size={20} /> Create Broadcast</h2>
+                    <button
+                        class="btn-close"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        <X size={20} />
+                    </button>
+                </header>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="alert-title">Title *</label>
+                        <input
+                            id="alert-title"
+                            type="text"
+                            placeholder="Brief alert title..."
+                            bind:value={newAlert.title}
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-description">Description</label>
+                        <textarea
+                            id="alert-description"
+                            placeholder="Detailed information..."
+                            rows="3"
+                            bind:value={newAlert.description}
+                        ></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-category">Category</label>
+                            <select
+                                id="alert-category"
+                                bind:value={newAlert.category}
+                            >
+                                {#each categories as cat}
+                                    <option value={cat.value}
+                                        >{cat.icon} {cat.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-severity">Severity</label>
+                            <select
+                                id="alert-severity"
+                                bind:value={newAlert.severity}
+                            >
+                                {#each severities as sev}
+                                    <option value={sev.value}
+                                        >{sev.label}</option
+                                    >
+                                {/each}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="alert-radius">Radius (km)</label>
+                            <input
+                                id="alert-radius"
+                                type="number"
+                                min="1"
+                                max="50"
+                                bind:value={newAlert.radius_meters}
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="alert-expiry">Expires in (hours)</label>
+                            <input
+                                id="alert-expiry"
+                                type="number"
+                                min="1"
+                                max="168"
+                                bind:value={newAlert.expires_in_hours}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button
+                        class="btn-secondary"
+                        onclick={() => (showBroadcastModal = false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="btn-broadcast"
+                        onclick={handleBroadcast}
+                        disabled={sending || !newAlert.title.trim()}
+                    >
+                        <Send size={16} />
+                        {sending ? "Sending..." : "Send Broadcast"}
+                    </button>
+                </footer>
+            </div>
+        </div>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/municipality/alerts/+page.svelte:96:13
+Error: Type '{ alerts: BroadcastAlert[]; count: number; }' is missing the following properties from type 'BroadcastAlert[]': length, pop, push, concat, and 35 more. (ts)
+            const data = await getMunicipalityAlerts(statusFilter);
+            alerts = data;
+            error = "";
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/notifications/+page.svelte:412:3
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/notifications/+page.svelte:526:4
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+			font-size: 0.8125rem;
+			-webkit-line-clamp: 1;
+		}
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/profile/+page.svelte:504:3
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/profile/+page.svelte:515:3
+Warn: Also define the standard property 'line-clamp' for compatibility (css)
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1371:5
+Warn: Unused CSS selector ".section-tabs"
+https://svelte.dev/e/css_unused_selector (svelte)
+    /* Tabs */
+    .section-tabs {
+        display: flex;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1378:5
+Warn: Unused CSS selector ".tab-btn"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .tab-btn {
+        padding: 0.75rem 0;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1390:5
+Warn: Unused CSS selector ".tab-btn:hover"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .tab-btn:hover {
+        color: var(--c-text-primary);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1394:5
+Warn: Unused CSS selector ".tab-btn.active"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .tab-btn.active {
+        color: var(--c-primary);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1399:5
+Warn: Unused CSS selector ".update-card"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .update-card {
+        padding: 1.5rem;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1408:5
+Warn: Unused CSS selector ".update-card.official"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .update-card.official {
+        border-left-color: var(--c-brand);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1413:5
+Warn: Unused CSS selector ".update-header"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .update-header {
+        display: flex;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1421:5
+Warn: Unused CSS selector ".author-badge"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .author-badge {
+         display: inline-flex;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1429:5
+Warn: Unused CSS selector ".official-badge"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .official-badge {
+         background: var(--c-brand);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:1438:5
+Warn: Unused CSS selector ".update-form"
+https://svelte.dev/e/css_unused_selector (svelte)
+    
+    .update-form {
+        margin-bottom: 2rem;
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:66:11
+Error: Property 'submitted_by' does not exist on type 'never'. (ts)
+			report &&
+			report.submitted_by &&
+			$user.username === report.submitted_by,
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:67:30
+Error: Property 'submitted_by' does not exist on type 'never'. (ts)
+			report.submitted_by &&
+			$user.username === report.submitted_by,
+	);
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:270:5
+Error: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'. (ts)
+			const newUpdate = await createReportUpdate(
+				reportId,
+				newUpdateContent,
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:307:5
+Error: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'. (ts)
+			await updateReportStatus(
+				reportId,
+				status,
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/report/[id]/+page.svelte:685:7
+Error: Type '"success"' is not assignable to type '"primary" | "secondary" | "danger" | undefined'. (ts)
+					<LoadingButton
+						variant="success"
+						onclick={() =>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/submit/+page.svelte:755:6
+Warn: A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control (svelte)
+				<div class="form-group">
+					<label>Location *</label>
+
+/home/sidhant/Desktop/darshi/frontend/src/routes/submit/+page.svelte:863:13
+Warn: Elements with the ARIA role "option" must have the following attributes defined: "aria-selected"
+https://svelte.dev/e/a11y_role_has_required_aria_props (svelte)
+												type="button"
+												role="option"
+												class="search-result-item"
+
+====================================
+svelte-check found 16 errors and 75 warnings in 16 files

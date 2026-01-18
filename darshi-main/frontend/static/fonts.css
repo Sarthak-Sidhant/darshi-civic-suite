@@ -1,0 +1,24 @@
+/* System fonts with performance-optimized fallbacks */
+@font-face {
+  font-family: 'Inter Fallback';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arial');
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+  size-adjust: 107%;
+}
+
+@font-face {
+  font-family: 'Outfit Fallback';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arial');
+  ascent-override: 92%;
+  descent-override: 20%;
+  line-gap-override: 0%;
+  size-adjust: 105%;
+}
+
+/* Fonts will be loaded via preconnect and link in layout instead */

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Darshi</title>
+      <link>https://darshi.app/docs</link>
+      <description>Last 10 notes on Darshi</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>QUICK_START</title>
+    <link>https://darshi.app/docs/QUICK_START</link>
+    <guid>https://darshi.app/docs/QUICK_START</guid>
+    <description><![CDATA[ 🚀 Darshi - Quick Start Guide Get Darshi up and running locally in 15 minutes! Live Site: darshi.app | API: api.darshi.app 📋 Prerequisites Before starting, ensure you have: Python 3.11+ installed Node.js 20+ installed PostgreSQL 15+ with PostGIS extension Redis 7+ (or use Docker for both) Git insta... ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>API</title>
+    <link>https://darshi.app/docs/guides/API</link>
+    <guid>https://darshi.app/docs/guides/API</guid>
+    <description><![CDATA[ Darshi API Documentation API Version: v1 | Base URL: /api/v1 Table of Contents Reports API Geospatial API Authentication API OAuth API Firebase Authentication Notifications API Users API Admin API Rate Limiting Error Handling Authentication Schemes Reports API POST /api/v1/report Create a new report... ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>ARCHITECTURE</title>
+    <link>https://darshi.app/docs/guides/ARCHITECTURE</link>
+    <guid>https://darshi.app/docs/guides/ARCHITECTURE</guid>
+    <description><![CDATA[ Architecture Overview - Darshi Platform This document provides a comprehensive overview of the Darshi platform’s architecture, design decisions, data models, and system components. ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>DEPLOYMENT</title>
+    <link>https://darshi.app/docs/guides/DEPLOYMENT</link>
+    <guid>https://darshi.app/docs/guides/DEPLOYMENT</guid>
+    <description><![CDATA[ Deployment Guide - Darshi Platform This comprehensive guide covers deploying the Darshi platform to production on Azure VPS with Docker Compose, PostgreSQL, Redis, and Cloudflare services. ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>DEVELOPMENT</title>
+    <link>https://darshi.app/docs/guides/DEVELOPMENT</link>
+    <guid>https://darshi.app/docs/guides/DEVELOPMENT</guid>
+    <description><![CDATA[ Development Guide - Darshi Platform This comprehensive guide covers everything developers need to know when working on the Darshi platform, from setting up your development environment to understanding code patterns and contributing guidelines. ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>index</title>
+    <link>https://darshi.app/docs/</link>
+    <guid>https://darshi.app/docs/</guid>
+    <description><![CDATA[ Darshi Documentation AI-powered civic grievance platform for reporting and tracking municipal issues Live Site: darshi.app Backend API: api.darshi.app 📚 Documentation Structure Getting Started Quick Start Guide - Get Darshi running locally in 5 minutes Development Guide - Developer workflow and bes... ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>future stuff</title>
+    <link>https://darshi.app/docs/misc/future-stuff</link>
+    <guid>https://darshi.app/docs/misc/future-stuff</guid>
+    <description><![CDATA[  ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>fund-tracking</title>
+    <link>https://darshi.app/docs/misc/future/fund-tracking</link>
+    <guid>https://darshi.app/docs/misc/future/fund-tracking</guid>
+    <description><![CDATA[ MP/MLA Fund Tracking Platform Transparency and Accountability in Local Area Development Spending Part of: Darshi Civic Suite This document outlines the integration strategy for tracking Member of Parliament (MP) and Member of Legislative Assembly (MLA) fund utilization, project progress, and expendi... ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>government-communication</title>
+    <link>https://darshi.app/docs/misc/future/government-communication</link>
+    <guid>https://darshi.app/docs/misc/future/government-communication</guid>
+    <description><![CDATA[ Government Communication Platform Integration Making Government Announcements Accessible Through AI-Powered Translation Part of: Darshi Civic Suite This document outlines the integration strategy for making government circulars and announcements accessible to all citizens regardless of language barr... ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item><item>
+    <title>grivredr</title>
+    <link>https://darshi.app/docs/misc/future/grivredr</link>
+    <guid>https://darshi.app/docs/misc/future/grivredr</guid>
+    <description><![CDATA[ Grivredr - AI-Powered Web Scraper Factory Automated Government Portal Integration for Grievance Filing Part of: Darshi Civic Suite This document outlines the integration and architecture of Grivredr, an intelligent system that automatically generates web scrapers for government grievance portals. ]]></description>
+    <pubDate>Sat, 27 Dec 2025 20:33:10 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>

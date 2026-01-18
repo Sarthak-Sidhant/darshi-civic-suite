@@ -1,0 +1,63 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  integration-tests:
+    name: Integration Tests (Staging DB)
+    runs-on: ubuntu-latest
+
+    # Only run on main branch or manual trigger to avoid excessive GCP usage
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create service account credentials
+        run: |
+          echo '${{ secrets.GCP_TEST_SERVICE_ACCOUNT }}' > test-sa.json
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ -v --tb=short
+        env:
+          ENVIRONMENT: test
+          PROJECT_ID: ${{ secrets.TEST_PROJECT_ID || 'darshi-cb3a7' }}
+          GOOGLE_APPLICATION_CREDENTIALS: test-sa.json
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_TEST || secrets.GEMINI_API_KEY }}
+          SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
+        continue-on-error: true  # Don't fail CI if integration tests fail (for now)
+
+      - name: Cleanup test data
+        if: always()
+        run: |
+          python -c "
+          # TODO: Add cleanup script to remove test reports/users
+          print('Cleanup not implemented yet')
+          "
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: |
+            pytest-report.html
+            test-results.xml
+        if: always()

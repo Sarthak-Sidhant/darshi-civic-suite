@@ -1,0 +1,182 @@
+name: Deploy to Azure VPS
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_BACKEND: ${{ github.repository }}/backend
+  IMAGE_NAME_FRONTEND: ${{ github.repository }}/frontend
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Extract metadata (tags, labels) for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build docs with Quartz
+        run: |
+          # Copy docs to Quartz content directory
+          cp -r docs/* docs-quartz/content/
+
+          # Build with Quartz
+          cd docs-quartz
+          npm install
+          npx quartz build --output ../frontend/static/docs
+        continue-on-error: true
+
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.azure
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.azure
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+            VITE_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Deploy to Azure VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            echo "=== Deployment started at $(date) ==="
+
+            # Navigate to project directory
+            cd /opt/darshi
+
+            # Pull latest code
+            echo "Pulling latest code..."
+            git pull origin main
+
+            # Log in to GitHub Container Registry
+            echo "Logging in to GHCR..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Pull latest images
+            echo "Pulling latest Docker images..."
+            docker-compose -f docker-compose.azure.yml pull
+
+            # Restart services with zero downtime
+            echo "Restarting services..."
+            docker-compose -f docker-compose.azure.yml up -d --remove-orphans
+
+            # Wait for health checks
+            echo "Waiting for services to be healthy..."
+            sleep 10
+
+            # Check service status
+            docker-compose -f docker-compose.azure.yml ps
+
+            # Prune old images to save space
+            echo "Cleaning up old Docker images..."
+            docker image prune -af --filter "until=48h"
+
+            # Check disk space
+            echo "Disk space:"
+            df -h /
+
+            echo "=== Deployment completed at $(date) ==="
+
+      - name: Verify Deployment
+        run: |
+          echo "Waiting for service to be available..."
+          sleep 15
+
+          # Health check
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://darshi.app/health || echo "000")
+
+          if [ "$response" = "200" ]; then
+            echo "✓ Deployment successful! Health check passed."
+          else
+            echo "✗ Health check failed with status: $response"
+            exit 1
+          fi
+
+      # Note: Telegram notifications disabled - uncomment and add TELEGRAM_BOT_TOKEN secret to enable
+      # - name: Notify on failure
+      #   if: failure()
+      #   uses: appleboy/telegram-action@master
+      #   with:
+      #     to: ${{ secrets.TELEGRAM_CHAT_ID }}
+      #     token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      #     format: markdown
+      #     message: |
+      #       ❌ *Deployment Failed*
+      #       Repository: `${{ github.repository }}`
+      #       Branch: `${{ github.ref_name }}`
+      #   continue-on-error: true
