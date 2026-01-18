@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-mole"
+name: "Ministry of Labour and Employment"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://labour.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

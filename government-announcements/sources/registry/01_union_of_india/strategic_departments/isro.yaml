@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "union-strat-isro"
+name: "Indian Space Research Organisation (ISRO)"
+type: "strategic_department"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+reporting_to: "Department of Space, PMO"
+
+# === SCRAPING CONFIG ===
+url: "https://www.isro.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

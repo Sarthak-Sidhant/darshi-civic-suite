@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-moci"
+name: "Ministry of Commerce and Industry"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://commerce.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

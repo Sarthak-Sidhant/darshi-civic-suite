@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-morail"
+name: "Ministry of Railways"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://indianrailways.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

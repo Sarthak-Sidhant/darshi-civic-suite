@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-moenv"
+name: "Ministry of Environment, Forest and Climate Change"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://moef.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

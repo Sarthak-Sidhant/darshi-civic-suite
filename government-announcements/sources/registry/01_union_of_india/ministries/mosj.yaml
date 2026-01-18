@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-mosj"
+name: "Ministry of Social Justice and Empowerment"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://socialjustice.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

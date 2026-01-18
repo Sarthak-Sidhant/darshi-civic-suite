@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-meity"
+name: "Ministry of Electronics and IT"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://www.meity.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

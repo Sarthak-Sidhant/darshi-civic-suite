@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-mowr"
+name: "Ministry of Jal Shakti (Water Resources)"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://jalshakti-dowr.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

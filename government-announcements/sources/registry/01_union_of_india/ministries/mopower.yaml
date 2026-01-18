@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-mopower"
+name: "Ministry of Power"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://powermin.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "medium"

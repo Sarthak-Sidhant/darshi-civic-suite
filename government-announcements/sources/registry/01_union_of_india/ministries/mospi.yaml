@@ -1,0 +1,15 @@
+# === IDENTITY ===
+id: "union-min-mospi"
+name: "Ministry of Statistics and Programme Implementation"
+type: "ministry"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+
+# === SCRAPING CONFIG ===
+url: "https://mospi.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "low"

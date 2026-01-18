@@ -1,0 +1,16 @@
+# === IDENTITY ===
+id: "union-strat-dae"
+name: "Department of Atomic Energy"
+type: "strategic_department"
+jurisdiction_level: "national"
+
+# === HIERARCHY ===
+parent: "union_of_india"
+reporting_to: "PMO"
+
+# === SCRAPING CONFIG ===
+url: "https://dae.gov.in"
+scraper_type: "s3waas"
+status: "pending"
+last_scraped: null
+priority: "low"
